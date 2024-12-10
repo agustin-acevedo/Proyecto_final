@@ -1,0 +1,98 @@
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    main {
+      
+        padding: 20px;
+        margin: 20px;            /* Espacio adicional alrededor del contenedor */
+        width: 80%;              /* Ajusta el ancho según el diseño */
+        max-width: 600px;        /* Evita que sea demasiado ancho en pantallas grandes */
+        text-align: center;      /* Centra el texto dentro del main */
+    }
+
+    .contenedor {
+        background-color: white;   /* Fondo blanco */
+        padding: 20px;             /* Márgenes internos */
+        border-radius: 10px;       /* Esquinas redondeadas */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+        width: 80%;                /* Ancho relativo al viewport */
+        max-width: 600px;          /* Ancho máximo */
+        text-align: center;        /* Centra el texto dentro del contenedor */
+    }
+
+   /* Estilo del Header */
+   .header {
+    display: flex;                  /* Activa Flexbox */
+    align-items: center;            /* Centra verticalmente el contenido */
+    justify-content: center;        /* Centra horizontalmente (excepto imagen) */
+    background-color: #333;         /* Fondo oscuro */
+    color: white;                   /* Texto blanco */
+    width: 100%;                    /* Ocupa todo el ancho */
+    padding: 10px 20px;             /* Márgenes internos */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para el header */
+    position: fixed;                /* Fija el header en la parte superior */
+    top: 0;                         /* Posición superior 0 */
+    z-index: 10;                    /* Asegura que esté encima de otros elementos */
+}
+
+/* Imagen del Logo */
+.logo {
+    width: 80px;                    /* Tamaño del logo */
+    height: 80px;                   /* Tamaño del logo */
+    margin-right: 15px;             /* Espacio entre la imagen y el título */
+}
+
+/* Título del Header */
+.titulo-header {
+    flex: 1;                        /* Ocupa el espacio restante */
+    text-align: center;             /* Centra el texto del título */
+    font-size: 1.5rem;              /* Tamaño del texto */
+}
+
+.wizard {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.next-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.prev-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.9;
+}

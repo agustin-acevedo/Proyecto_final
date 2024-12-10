@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css">
+    <title>Comparación de Algoritmos</title>
+</head>
+
+<body>
+    <header class="header">
+        <!--<img src="imagenes/logofacena.png" alt="Logo" class="logo">-->
+        <img src="{{ url_for('static', filename='imagenes/logofacena.jpg') }}" alt="Logo" class="logo">
+
+        <h1 class="titulo-header">Proyecto Final de Carrera</h1>
+    </header>
+    <div class="contenedor">
+        <div style="padding-bottom: 20px;">
+            <h1>1 - Cargar el conjunto de datos</h1>
+            <p style="padding-bottom: 10px;">Selecciona el conjunto de datos que desea cargar</p>
+            <form id="uploadForm" enctype="multipart/form-data" class="containerTablaFiltro">
+                <input type="file" id="file" name="file">
+                <button type="button" onclick="uploadDataset()" class="btnSubirArchivo">Subir</button>
+            </form>
+        </div>
+
+        <div>
+            <h1>2 - Iniciar el preprocesamiento</h1>
+            <p style="padding-bottom: 10px;">Se iniciciara el preprocesamiento de los datos</p>
+            <button class="btnSubirArchivo">Iniciar</button>
+        </div>
+
+        <div style="padding-bottom: 20px;">
+            <h1>3 - Seccion 3</h1>
+            <p style="padding-bottom: 10px;">Descripccion de la seccion 3</p>
+        </div>
+
+        <div>
+            <h1>4 - Seccion 4</h1>
+            <p style="padding-bottom: 10px;">Descripcion se la seccion 4</p>
+            <button class="btnSubirArchivo">Iniciar</button>
+        </div>
+    </div>
+
+    <!-- Contenedor para resultados -->
+    <div class="resultados">
+        <h2>Resultados</h2>
+        <H3>graficos</H3>
+        <div id="graficos">
+            <!-- Aquí se cargarán los gráficos -->
+        </div>
+        <div id="tablas">
+            <!-- Aquí se cargarán las tablas -->
+        </div>
+    </div>
+
+    <!--
+        <main class="main" style="width:100%;height:100%;">
+            <div class="contentPlaceHolder">
+                
+                <div class="contentSection" style="background-color: #CACACA;border-radius: 3%;">
+                    <div class="SectionSeleccionarData" >
+                        <div class="gridPasosEstado" style="width:100%;grid-template-columns:100fr;grid-template-rows:auto auto auto auto auto auto;">
+                            <div class="tablaSeleccionar">
+                                <div style="display: flex;">
+                                    <div data-aling="left" data-valing = "middle">
+                                        <span class="BigTitle"> 1 - Seleccione el conjunto de datos</span>
+                                    </div>
+                                </div>
+                                <div style="width:100%;grid-template-columns:100fr;grid-template-rows:auto auto; padding-top: 24px;">
+                                    <table class="table-striped">
+                                        <form id="uploadForm" enctype="multipart/form-data" class="containerTablaFiltro">
+                                            <input type="file" id="file" name="file">
+                                            <button type="button" onclick="uploadDataset()" class="btnSubirArchivo">Subir</button>
+                                        </form>     
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div style= " display: block; width: 100%; grid-template-columns: 100fr; 
+                            grid-template-rows: auto auto auto auto; row-gap: 20px; padding-top: 24px;">
+                            <div style="display: flex;">
+                                <div data-aling="center" data-valing="middle" >
+                                    <span class="BigTitle"> 2 - Elegir el modelo</span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </main>
+-->
+
+
+    <!--
+    <h1 class="titulo">Comparación de Algoritmos de Machine Learning</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="file">Carga tu Dataset:</label>
+        <input type="file" id="file" name="file">
+        <button type="button" onclick="uploadDataset()" class="btnSubirArchivo">Subir</button>
+    </form>
+    <div id="columns"></div>
+    <form id="trainForm" style="display: none;">
+        <label for="target">Selecciona la columna objetivo:</label>
+        <select id="target" name="target"></select>
+        <button type="button" onclick="trainModel()">Entrenar Modelo</button>
+    </form>
+    <div id="results"></div>
+   
+-->
+
+    <script>
+        function uploadDataset() {
+            const formData = new FormData(document.getElementById("uploadForm"));
+            fetch('/upload', { method: 'POST', body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.columns) {
+                        document.getElementById("columns").innerHTML = "Columnas disponibles: " + data.columns.join(", ");
+                        const select = document.getElementById("target");
+                        select.innerHTML = data.columns.map(col => `<option value="${col}">${col}</option>`).join("");
+                        document.getElementById("trainForm").style.display = "block";
+                    }
+                });
+        }
+
+        function trainModel() {
+            const target = document.getElementById("target").value;
+            fetch('/train', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filepath: 'uploads/dataset.csv', target: target })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("results").innerHTML = `Precisión del modelo: ${data.accuracy}`;
+                });
+        }
+    </script>
+</body>
+
+</html>
