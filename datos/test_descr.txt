@@ -1,0 +1,3 @@
+[['Analysis' 'Backdoor' 'DoS' 'Exploits' 'Fuzzers' 'Generic' 'Normal'
+  'Reconnaissance' 'Shellcode' 'Worms']
+ ['518' '428' '3094' '8396' '4469' '10057' '13962' '2598' '281' '33']]

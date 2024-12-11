@@ -121,14 +121,14 @@ function goToStep(step) {
     } else {
         if (step === 3) {
             //LOGICA PARA CONECTAR CON EL BACKEND DEL PREPROCESAMIENTO 
-            preprocesarDatos(filePath, () => {
+            preprocesarDatos(ruta, () => {
                 // Avanza al siguiente paso después del preprocesamiento
                 showStep(4);
             });
         }
     }
     // Para otros pasos, solo cambiar
-    showStep(step);
+    //showStep(step);
 }
 
 

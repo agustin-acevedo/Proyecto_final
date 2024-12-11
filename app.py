@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, jsonify
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-import os
+import os.path
 from models.process import leerArchivo, preprocesamiento
 import numpy as np
 import pickle
@@ -136,37 +136,52 @@ def preprocess_data():
         #Se guarda los datos en el disco
         print("Los datos se estan guardando en el disco...")
         
-        unique_elements, counts_elements = np.unique(le.inverse_transform(y_test.astype(int)), return_counts=True)
+        unique_elements, counts_elements = np.unique(le.inverse_transform(y_train.astype(int)), return_counts=True)
         print ("Número de elementos de cada clase en el Train Set:")
         print(np.asarray((unique_elements, counts_elements)))
-        with open("./datos/train_descr.txt","w") as f:
-            f.write(str(np.asarray((unique_elements, counts_elements))))
+       
+        # Crear la carpeta si no existe
+        os.makedirs("datos", exist_ok=True)
+
+        # Ruta completa del archivo
+        ruta_archivo = os.path.join("datos", "train_descr.txt")
+
+        # Escribir en el archivo
+        with open(ruta_archivo, "w") as archivo:
+            archivo.write(str(np.asarray((unique_elements, counts_elements))))
 
         unique_elements, counts_elements = np.unique(le.inverse_transform(y_test.astype(int)), return_counts=True)
         print ("Número de elementos de cada clase en el Test Set:")
         print(np.asarray((unique_elements, counts_elements)))
-        with open("./datos/test_descr.txt","w") as f:
-            f.write(str(np.asarray((unique_elements, counts_elements))))
+         # Crear la carpeta si no existe
+        os.makedirs("datos", exist_ok=True)
+
+        # Ruta completa del archivo
+        ruta_archivo = os.path.join("datos", "test_descr.txt")
+
+        # Escribir en el archivo
+        with open(ruta_archivo, "w") as archivo:
+            archivo.write(str(np.asarray((unique_elements, counts_elements))))
                 
         for num in NUM_CARACT:
             # SELECCION DE CARACTERÍSTICAS
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS")
             estimador = tree.DecisionTreeClassifier()
-            selector1 = RFE(estimador, n_caracteristicas_to_select=int(num), step=1)
-            selector2 = PCA(n_components=int(num))
+            selector1 = RFE(estimador, int(num), step=1)
+            #selector2 = PCA(n_components=int(num))
 
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR RFE")
             selector1 = selector1.fit(X_test, y_test)
             print (selector1.ranking_)
 
-            print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR PCA")
-            selector2 = selector2.fit(X_train, y_train)
+            #print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR PCA")
+            #selector2 = selector2.fit(X_train, y_train)
 
 
             X_train1 = selector1.transform(X_train)
             X_test1 = selector1.transform(X_test)
-            X_train2 = selector2.transform(X_train)
-            X_test2 = selector2.transform(X_test)
+            #X_train2 = selector2.transform(X_train)
+            #X_test2 = selector2.transform(X_test)
 
             # CREAR DIRECTORIOS PARA GUARDAR DATOS PROCESADOS
             if not os.path.exists("./datos/caracteristicas" + str(num) + "selectorRFE"):
@@ -221,40 +236,6 @@ def preprocess_data():
         print(f"Error durante el preprocesamiento: {e}")
         return jsonify({'message': 'Error durante el preprocesamiento', 'status': 'error'}), 500
 
-
-
-
-
-
-@app.route('/models/process', methods=['POST'])
-def process():
-    file = request.files['file']  # Archivo cargado por el usuario
-    target_column = request.form['target_column']  # Columna objetivo enviada por el usuario
-    try:
-        # Cargar el dataset
-        df = leerArchivo(file)
-        
-        raw_data = list(df)
-
-        np_data = np.asarray(raw_data, dtype=None)
-
-        X = np_data[:, 0:-2]  # Seleccionar todas las columnas menos las dos últimas
-        #y = np_data_test[:, -2]    # Seleccionar la penúltima columna (etiqueta como cadena)
-        
-        
-        
-        
-        # Preprocesar los datos
-        
-        X_prepocesado, y_preprocesado = preprocesamiento(X, target_column)
-        
-        # Entrenar y evaluar modelos
-       # results = train_and_evaluate_models(X_train, X_test, y_train, y_test)
-        
-        # Retornar resultados
-       # return jsonify(results)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
 
 
 # Ruta para entrenar el modelo
