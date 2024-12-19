@@ -167,7 +167,7 @@ def preprocess_data():
             # SELECCION DE CARACTERÍSTICAS
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS")
             estimador = tree.DecisionTreeClassifier()
-            selector1 = RFE(estimador, int(num), step=1)
+            selector1 = RFE(estimador, n_features_to_select= None)
             #selector2 = PCA(n_components=int(num))
 
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR RFE")
