@@ -31,12 +31,12 @@ body {
   
   main {
     display: flex; /* Activa Flexbox */
-    flex-direction: column;
+    /*flex-direction: column;*/
     align-items: center; /* Centra verticalmente */
-    justify-content: center;
+   /* justify-content: center; */
     height: 100%; /* Hace que el <main> ocupe toda la altura de la ventana */
     width: 100%; /* Asegura que el <main> ocupe todo el ancho */
-    background-color: #f9f9f9; /* Fondo opcional */
+   /* background-color: #f9f9f9; /* Fondo opcional */
     text-align: center;
   }
   
@@ -110,3 +110,18 @@ button {
 button:hover {
     opacity: 0.9;
 }
+
+.contenedorGeneral{
+    display: flex;
+    flex-direction: column; /* Coloca los contenedores uno debajo del otro */
+    gap: 20px; /* Espaciado entre contenedores */
+    width: 80%; /* Ancho del contenedor general */
+    max-width: 1200px;
+    margin: 0 auto;
+   /* border: 2px solid #ddd; /* Opcional: Bordes */
+    padding: 20px; /* Opcional: Espaciado interno */
+   /* background-color: #f9f9f9; */
+    align-items: center;
+    height: auto;
+}
+
