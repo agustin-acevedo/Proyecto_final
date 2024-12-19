@@ -18,56 +18,57 @@
         <h1 class="titulo-header">Proyecto Final de Carrera</h1>
     </header>
     <main>
+        <div class="contenedorGeneral">
 
-        <div class="contenedor" style="margin: 20px 0;">
-            <h2> Descripcion del proyecto:</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum omnis eius libero consequatur placeat
-                doloremque incidunt molestiae praesentium ea minus blanditiis optio iusto, soluta odio esse,
-                quaerat alias ducimus veritatis.</p>
+            <div class="contenedor" style="margin: 20px 0;">
+                <h2> Descripcion del proyecto:</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum omnis eius libero consequatur placeat
+                    doloremque incidunt molestiae praesentium ea minus blanditiis optio iusto, soluta odio esse,
+                    quaerat alias ducimus veritatis.</p>
 
+            </div>
+
+
+            <div class="wizard">
+                <!-- Paso 1 -->
+                <div class="step active" id="step-1">
+                    <h2>Paso 1: Cargar Dataset</h2>
+                    <p>Carga el conjunto de datos con el que desea trabajar.</p>
+                    <input type="file" id="file-input">
+                    <button class="next-btn" onclick="goToStep(2)">Siguiente</button>
+                </div>
+
+                <!-- Paso 3 -->
+                <div class="step" id="step-2">
+                    <h2>Paso 2: Preprocesar Datos</h2>
+                    <p>Al presionar en el boton "Siguiente" se iniciciara el preprocesamiento de los datos cargados.</p>
+                    <button class="prev-btn" onclick="goToStep(1)">Anterior</button>
+                    <button class="next-btn" onclick="goToStep(3)">Siguiente</button>
+                </div>
+
+                <!-- Paso 3 -->
+                <div class="step" id="step-3">
+                    <h2>Paso 3: Evaluar Modelos</h2>
+                    <label for="modelSelect">Elige un algoritmo:</label>
+                    <select id="modelSelect" name="model">
+                        <option value="linear_regression">Regresión Lineal</option>
+                        <option value="decision_tree">Árbol de Decisión</option>
+                        <option value="random_forest">Bosque Aleatorio</option>
+                        <option value="svm">Máquinas de Soporte Vectorial (SVM)</option>
+                        <option value="knn">K-Nearest Neighbors (KNN)</option>
+                    </select>
+                    <button class="prev-btn" onclick="goToStep(2)">Anterior</button>
+                    <button class="next-btn" onclick="goToStep(4)">Siguiente</button>
+                </div>
+
+                <!-- Paso 4 -->
+                <div class="step" id="step-4">
+                    <h2>Paso 4: Resultados</h2>
+                    <p>Aquí se mostrarán los gráficos y las tablas generadas.</p>
+                    <button class="prev-btn" onclick="goToStep(3)">Anterior</button>
+                </div>
+            </div>
         </div>
-
-
-        <div class="wizard">
-            <!-- Paso 1 -->
-            <div class="step active" id="step-1">
-                <h2>Paso 1: Cargar Dataset</h2>
-                <p>Carga el conjunto de datos con el que desea trabajar.</p>
-                <input type="file" id="file-input">
-                <button class="next-btn" onclick="goToStep(2)">Siguiente</button>
-            </div>
-
-            <!-- Paso 3 -->
-            <div class="step" id="step-2">
-                <h2>Paso 2: Preprocesar Datos</h2>
-                <p>Al presionar en el boton "Siguiente" se iniciciara el preprocesamiento de los datos cargados.</p>
-                <button class="prev-btn" onclick="goToStep(1)">Anterior</button>
-                <button class="next-btn" onclick="goToStep(3)">Siguiente</button>
-            </div>
-
-            <!-- Paso 3 -->
-            <div class="step" id="step-3">
-                <h2>Paso 3: Evaluar Modelos</h2>
-                <label for="modelSelect">Elige un algoritmo:</label>
-                <select id="modelSelect" name="model">
-                    <option value="linear_regression">Regresión Lineal</option>
-                    <option value="decision_tree">Árbol de Decisión</option>
-                    <option value="random_forest">Bosque Aleatorio</option>
-                    <option value="svm">Máquinas de Soporte Vectorial (SVM)</option>
-                    <option value="knn">K-Nearest Neighbors (KNN)</option>
-                </select>
-                <button class="prev-btn" onclick="goToStep(2)">Anterior</button>
-                <button class="next-btn" onclick="goToStep(4)">Siguiente</button>
-            </div>
-
-            <!-- Paso 4 -->
-            <div class="step" id="step-4">
-                <h2>Paso 4: Resultados</h2>
-                <p>Aquí se mostrarán los gráficos y las tablas generadas.</p>
-                <button class="prev-btn" onclick="goToStep(3)">Anterior</button>
-            </div>
-        </div>
-
 
     </main>
 
