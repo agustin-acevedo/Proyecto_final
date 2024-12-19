@@ -124,7 +124,7 @@ function goToStep(step) {
             //LOGICA PARA CONECTAR CON EL BACKEND DEL PREPROCESAMIENTO 
             preprocesarDatos(ruta, () => {
                 // Avanza al siguiente paso después del preprocesamiento
-                showStep(4);
+                //showStep(4);
             });
         }
     }
@@ -148,8 +148,29 @@ function preprocesarDatos(filePath, callback) {
     }
     
     // Muestra un mensaje al usuario mientras se procesa
-    alert('Iniciando preprocesamiento de datos...');
+    const messages = [
+        "Empezando el procesamiento...",
+        "Dividiendo el conjunto de datos...",
+        "Aplicando transformaciones...",
+        "Generando resultados..."
+    ];
 
+    let index = 0;
+    const loadingText = document.getElementById("loading-text");
+    const loadingMessage = document.getElementById("loading-message");
+
+    // Mostrar el overlay de carga
+    loadingMessage.style.display = "flex";
+
+    // Actualizar el mensaje cada 2 segundos
+    const intervalId = setInterval(() => {
+        if (index < messages.length) {
+            loadingText.textContent = messages[index];
+            index++;
+        } else {
+            clearInterval(intervalId);
+        }
+    }, 2000);
     // Envía la ruta del archivo al backend
     fetch('/preprocess', {
         method: 'POST',
@@ -167,14 +188,22 @@ function preprocesarDatos(filePath, callback) {
     })
     .then(data => {
         console.log('Preprocesamiento completado:', data);
-        alert('Preprocesamiento completado con éxito.');
+        //alert('Preprocesamiento completado con éxito.');
+        // Ocultar el overlay al completar
+        clearInterval(intervalId);
+        loadingMessage.style.display = "none";
         if (callback) callback();
     })
     .catch(error => {
         console.error('Error en la solicitud:', error);
-        alert('Hubo un problema durante el preprocesamiento.');
+       // alert('Hubo un problema durante el preprocesamiento.');
+       // Ocultar el overlay al completar
+       clearInterval(intervalId);
+       loadingMessage.style.display = "none";
     });
 }
+
+
 
 
 
