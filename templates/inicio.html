@@ -28,6 +28,14 @@
 
             </div>
 
+            
+            <div class="contenedor" style="margin: 20px 0;">
+                <h2> Contenedor 2:</h2>
+                <p>Este contenedor es para ver como se veria la pagina si se agregan mas secciones 
+                    para ver si se adapta al tamaño o no.</p>
+
+            </div>
+
 
             <div class="wizard">
                 <!-- Paso 1 -->
@@ -44,6 +52,10 @@
                     <p>Al presionar en el boton "Siguiente" se iniciciara el preprocesamiento de los datos cargados.</p>
                     <button class="prev-btn" onclick="goToStep(1)">Anterior</button>
                     <button class="next-btn" onclick="goToStep(3)">Siguiente</button>
+                </div>
+
+                <div id="loading-message" class="loading-overlay" style="display: none;">
+                    <p id="loading-text">Cargando, por favor espera...</p>
                 </div>
 
                 <!-- Paso 3 -->
