@@ -111,7 +111,8 @@ function goToStep(step) {
             console.log('Archivo subido con éxito:', data.filePath);
             alert('Archivo subido correctamente.');
             // Llama a goToStep para avanzar al preprocesamiento
-           // goToStep(3, data.filePath);
+           //goToStep(3, data.filePath);
+
            ruta = data.filePath
         })
         .catch(error => {
@@ -128,7 +129,7 @@ function goToStep(step) {
         }
     }
     // Para otros pasos, solo cambiar
-    //showStep(step);
+    showStep(step);
 }
 
 
