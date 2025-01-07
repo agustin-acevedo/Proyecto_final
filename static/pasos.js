@@ -126,6 +126,10 @@ function goToStep(step) {
                 // Avanza al siguiente paso después del preprocesamiento
                 //showStep(4);
             });
+        } else {
+            if (step === 4) {
+                trainModel();
+            }
         }
     }
     // Para otros pasos, solo cambiar
@@ -152,7 +156,7 @@ function preprocesarDatos(filePath, callback) {
         "Empezando el procesamiento...",
         "Dividiendo el conjunto de datos...",
         "Aplicando transformaciones...",
-        "Generando resultados..."
+        "Generando resultados y guardando..."
     ];
 
     let index = 0;
@@ -170,7 +174,7 @@ function preprocesarDatos(filePath, callback) {
         } else {
             clearInterval(intervalId);
         }
-    }, 2000);
+    }, 3000);
     // Envía la ruta del archivo al backend
     fetch('/preprocess', {
         method: 'POST',
@@ -203,6 +207,45 @@ function preprocesarDatos(filePath, callback) {
     });
 }
 
+function trainModel() {
+    const form = document.getElementById('model-form');
+    const formData = new FormData(form);
+    const model = formData.get('model'); // Captura el modelo seleccionado
+
+    if (!model) {
+        alert('Por favor, selecciona un modelo.');
+        return;
+    }
+
+    // Mostrar mensaje de estado
+    const statusMessage = document.getElementById('training-status');
+    statusMessage.style.display = 'block';
+
+    // Enviar modelo al backend
+    fetch('/train', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ model: model })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error durante el entrenamiento');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Entrenamiento completado:', data);
+        alert(`Entrenamiento completado. Resultado: ${data.message}`);
+        statusMessage.style.display = 'none';
+    })
+    .catch(error => {
+        console.error('Hubo un problema:', error);
+        alert('Ocurrió un error durante el entrenamiento.');
+        statusMessage.style.display = 'none';
+    });
+}
 
 
 
