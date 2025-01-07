@@ -36,10 +36,10 @@ print("ARGUMENTOS: num_caract=" + str(num_caract) + " selector=" + str(selector)
 
 #APERTURA FICHERO
 print ("LECTURA DE FICHERO")
-X_train = np.loadtxt("./datos/features" + str(num_caract) + "selector" + str(selector) + "/X_train.csv", delimiter=',')
-y_train = np.loadtxt("./datos/features" + str(num_caract) + "selector" + str(selector) + "/y_train.csv", delimiter=',')
-X_test = np.loadtxt("./datos/features" + str(num_caract) + "selector" + str(selector) + "/X_test.csv", delimiter=',')
-y_test = np.loadtxt("./datos/features" + str(num_caract) + "selector" + str(selector) + "/y_test.csv", delimiter=',')
+X_train = np.loadtxt("./datos/caracteristicas" + str(num_caract) + "selector" + str(selector) + "/X_train.csv", delimiter=',')
+y_train = np.loadtxt("./datos/caracteristicas" + str(num_caract) + "selector" + str(selector) + "/y_train.csv", delimiter=',')
+X_test = np.loadtxt("./datos/caracteristicas" + str(num_caract) + "selector" + str(selector) + "/X_test.csv", delimiter=',')
+y_test = np.loadtxt("./datos/caracteristicas" + str(num_caract) + "selector" + str(selector) + "/y_test.csv", delimiter=',')
 le = pickle.load(open('./modelos/le.sav', 'rb'))
 
 # Inicializar el clasificador base
@@ -91,33 +91,33 @@ if not os.path.exists("./resultados"):
     os.mkdir("./resultados")
 
 #Métricas de rendimiento globales
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-bacc.dat',"w") as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-bacc.dat',"w") as f:
     f.write(str(float(bacc)))
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-precision.dat',"w") as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-precision.dat',"w") as f:
     f.write(str(float(p)))
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Tiempo_entrenamiento.dat',"w") as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Tiempo_entrenamiento.dat',"w") as f:
     f.write(str(float(t_fin_entrenamiento - t_inicio_entrenamiento)))
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Tiempo_clasificacion.dat',"w") as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Tiempo_clasificacion.dat',"w") as f:
     f.write(str(float(t_fin_clasif - t_inicio_clasif)))
 
 #Metricas de rendimiento por clase
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Precision.npy','wb') as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Precision.npy','wb') as f:
     np.save(f, v_p)
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Sensibilidad.npy','wb') as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Sensibilidad.npy','wb') as f:
     np.save(f, v_recall)
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Fscore.npy','wb') as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Fscore.npy','wb') as f:
     np.save(f, v_fscore)
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Total.npy','wb') as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-Total.npy','wb') as f:
     np.save(f, v_support)
 
 
 #Métricas para la selección de características
 with open('./resultados/descr_general.dat',"a") as f:
     f.write(L_CLF + " num_caract=" + str(num_caract) + " selector=" + str(selector) + " bacc=" + str(float(bacc)) + " p=" + str(float(p)) + " TRT=" + str(t_fin_entrenamiento - t_inicio_entrenamiento) + " \n")
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/bacc_FeaturesSelector.dat',"a") as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/bacc_caracteristicasSelector.dat',"a") as f:
     f.write(str(float(bacc)) + " \n")
 
 
 #Confusion Matrix y métricas derivadas
-with open('./resultados/features' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-confusion_matrix.npy','wb') as f:
+with open('./resultados/caracteristicas' + str(num_caract) + 'selector' + str(selector) + '/' + L_CLF + '-confusion_matrix.npy','wb') as f:
     np.save(f, confusion_matrix)

@@ -63,15 +63,19 @@
                     <h2>Paso 3: Evaluar Modelos</h2>
                     <label for="modelSelect">Elige un algoritmo:</label>
                     <select id="modelSelect" name="model">
-                        <option value="random_forest">Bosque Aleatorio (Enfoque Bagging)</option>
+                        <option value="RF">Bosque Aleatorio (Enfoque Bagging)</option>
                         <option value="AdaBoost">Adaptive Boosting (Enfoque Boosting)</option>
-                        <option value="gradientBoosting">Gradient Boosting (Enfoque Boosting)</option>
+                        <option value="GBM">Gradient Boosting (Enfoque Boosting)</option>
                         <option value="XGBoost">Extreme Gradient Boosting (Enfoque Boosting)</option>
                         <option value="LightGBM">Light Gradient Boosting Machine(Enfoque Boosting)</option>
-                        <option value="voting">Voting Classifier (Enfoque Voting)</option>
+                        <option value="VC">Voting Classifier (Enfoque Voting)</option>
                     </select>
                     <button class="prev-btn" onclick="goToStep(2)">Anterior</button>
                     <button class="next-btn" onclick="goToStep(4)">Siguiente</button>
+                </div>
+
+                <div id="loading-message" class="loading-overlay" style="display: none;">
+                    <p id="training-status">Cargando, por favor espera...</p>
                 </div>
 
                 <!-- Paso 4 -->

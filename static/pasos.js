@@ -208,11 +208,11 @@ function preprocesarDatos(filePath, callback) {
 }
 
 function trainModel() {
-    const form = document.getElementById('model-form');
-    const formData = new FormData(form);
-    const model = formData.get('model'); // Captura el modelo seleccionado
+    // Obtener el modelo seleccionado del <select>
+    const modelSelect = document.getElementById('modelSelect');
+    const selectedModel = modelSelect.value; // Captura el valor seleccionado
 
-    if (!model) {
+    if (!selectedModel) {
         alert('Por favor, selecciona un modelo.');
         return;
     }
@@ -220,14 +220,15 @@ function trainModel() {
     // Mostrar mensaje de estado
     const statusMessage = document.getElementById('training-status');
     statusMessage.style.display = 'block';
+    statusMessage.textContent = 'Entrenando modelo...';
 
-    // Enviar modelo al backend
+    // Enviar el modelo seleccionado al backend
     fetch('/train', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ model: model })
+        body: JSON.stringify({ model: selectedModel })
     })
     .then(response => {
         if (!response.ok) {
@@ -246,39 +247,3 @@ function trainModel() {
         statusMessage.style.display = 'none';
     });
 }
-
-
-
-
-/*
-function goToStep(stepNumber) {
-    // Validar datos del paso 1
-    if (stepNumber === 2) {
-       const fileInput = document.getElementById('file-input');
-       /*const formData = new FormData(document.getElementById('file-input'));
-        if (!fileInput.value) {
-            alert('Por favor, selecciona un archivo.');
-            return;
-        }else{
-            fetch('/uploads', { method: 'POST', body: fileInput })
-            .then(response => response.json())
-            .then(data => {
-                if (data.columns) {
-                    document.getElementById("columns").innerHTML = "Columnas disponibles: " + data.columns.join(", ");
-                    const select = document.getElementById("target");
-                    select.innerHTML = data.columns.map(col => `<option value="${col}">${col}</option>`).join("");
-                    document.getElementById("trainForm").style.display = "block";
-                }
-            });
-        }
-    }
-
-
-
-    // Cambiar de paso
-    const steps = document.querySelectorAll('.step');
-    steps.forEach(step => step.classList.remove('active'));
-    const currentStep = document.getElementById(`step-${stepNumber}`);
-    currentStep.classList.add('active');
-}
-*/

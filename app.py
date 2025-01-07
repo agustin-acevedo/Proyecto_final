@@ -167,7 +167,7 @@ def preprocess_data():
             # SELECCION DE CARACTERÍSTICAS
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS")
             estimador = tree.DecisionTreeClassifier()
-            selector1 = RFE(estimador, n_features_to_select= None)
+            selector1 = RFE(estimador, n_features_to_select= 20, step=1)
             #selector2 = PCA(n_components=int(num))
 
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR RFE")
@@ -240,22 +240,41 @@ def preprocess_data():
 
 # Ruta para entrenar el modelo
 @app.route('/train', methods=['POST'])
-def train_model():
-    req_data = request.get_json()
-    filepath = req_data['filepath']
-    target_column = req_data['target']
+def train():
+     
+    # Recibir el modelo seleccionado
+    data = request.json
+    model_name = data.get('model')
+
+    if not model_name:
+        return jsonify({'error': 'No se recibió el modelo seleccionado'}), 400
     
-    data = pd.read_csv(filepath)
-    X = data.drop(columns=[target_column])
-    y = data[target_column]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    model = RandomForestClassifier()
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    
-    return jsonify({"accuracy": accuracy, "message": "Modelo entrenado exitosamente"})
+    try:
+        #TESTEAR LOS CLASIFICADORES
+        print("TESTEAR EL CLASIFICADOR")
+        if os.path.exists('./resultados/descr_general.dat'):
+            os.remove('./resultados/descr_general.dat')
+        for num in NUM_CARACT:
+            # if os.path.exists("./resultados/caracteristicas" + str(num) + "selectorPCA/bacc_caracteristicasSelector.dat"):
+            #   os.remove("./resultados/caracteristicas" + str(num) + "selectorPCA/bacc_caracteristicasSelector.dat")
+            if os.path.exists("./resultados/caracteristicas" + str(num) + "selectorRFE/bacc_caracteristicasSelector.dat"):
+                os.remove("./resultados/caracteristicas" + str(num) + "selectorRFE/bacc_caracteristicasSelector.dat")
+
+        for num in NUM_CARACT:
+            script_descriptor = open("./clasificadores/" + model_name + ".py")
+            script = script_descriptor.read()
+            sys.argv = [str(model_name) + ".py", int(num), 'RFE']
+            exec(script)
+            # sys.argv = [str(model_name) + ".py", int(num), 'PCA']
+            # exec(script)
+
+        # Enviar el resultado al frontend
+        return jsonify({
+            'status': 'success'
+        }), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     if not os.path.exists('uploads'):
