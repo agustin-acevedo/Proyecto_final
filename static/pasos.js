@@ -145,6 +145,8 @@ function showStep(step) {
     });
 }
 
+
+
 function preprocesarDatos(filePath, callback) {
     if (!filePath) {
         alert('No se encontró la ruta del archivo para procesar.');
@@ -156,7 +158,8 @@ function preprocesarDatos(filePath, callback) {
         "Empezando el procesamiento...",
         "Dividiendo el conjunto de datos...",
         "Aplicando transformaciones...",
-        "Generando resultados y guardando..."
+        "Generando resultados y guardando...",
+        "Ya casi esta listo..."
     ];
 
     let index = 0;
@@ -166,7 +169,7 @@ function preprocesarDatos(filePath, callback) {
     // Mostrar el overlay de carga
     loadingMessage.style.display = "flex";
 
-    // Actualizar el mensaje cada 2 segundos
+    // Actualizar el mensaje cada 4 segundos
     const intervalId = setInterval(() => {
         if (index < messages.length) {
             loadingText.textContent = messages[index];
@@ -174,7 +177,7 @@ function preprocesarDatos(filePath, callback) {
         } else {
             clearInterval(intervalId);
         }
-    }, 3000);
+    }, 4000);
     // Envía la ruta del archivo al backend
     fetch('/preprocess', {
         method: 'POST',
@@ -191,11 +194,12 @@ function preprocesarDatos(filePath, callback) {
         }
     })
     .then(data => {
-        console.log('Preprocesamiento completado:', data);
+        //console.log('Preprocesamiento completado:', data);
         //alert('Preprocesamiento completado con éxito.');
         // Ocultar el overlay al completar
         clearInterval(intervalId);
         loadingMessage.style.display = "none";
+        console.log('Preprocesamiento completado:', data);
         if (callback) callback();
     })
     .catch(error => {
@@ -216,11 +220,38 @@ function trainModel() {
         alert('Por favor, selecciona un modelo.');
         return;
     }
+    const messages = [
+        "Empezando con el entrenamiento del modelo...",
+        "Testeando el clasificador...",
+        "Lectura del fichero...",
+        "Empezando la fase de entrenamiento...",
+        "Empezando la fase de clasificación...",
+        "Obteniendo las metricas de rendimiento...",
+        "Gruadando los resultados en el disco...",
+        "Ya casi esta listo, aguarde un momento..."
+    ];
+
+    let index = 0;
+    const loadingText = document.getElementById("training-status");
+    const loadingMessage = document.getElementById("loading-message-train");
 
     // Mostrar mensaje de estado
-    const statusMessage = document.getElementById('training-status');
-    statusMessage.style.display = 'block';
-    statusMessage.textContent = 'Entrenando modelo...';
+   // const statusMessage = document.getElementById('training-status');
+    //statusMessage.style.display = 'block';
+    //statusMessage.textContent = 'Entrenando modelo...';
+
+    // Mostrar el overlay de carga
+    loadingMessage.style.display = "flex";
+
+    // Actualizar el mensaje cada 4 segundos
+    const intervalId = setInterval(() => {
+        if (index < messages.length) {
+            loadingText.textContent = messages[index];
+            index++;
+        } else {
+            clearInterval(intervalId);
+        }
+    }, 4000);
 
     // Enviar el modelo seleccionado al backend
     fetch('/train', {
@@ -237,9 +268,12 @@ function trainModel() {
         return response.json();
     })
     .then(data => {
-        console.log('Entrenamiento completado:', data);
-        alert(`Entrenamiento completado. Resultado: ${data.message}`);
-        statusMessage.style.display = 'none';
+        //console.log('Entrenamiento completado:', data);
+        //alert(`Entrenamiento completado. Resultado: ${data.message}`);
+        //statusMessage.style.display = 'none';
+        clearInterval(intervalId);
+        loadingMessage.style.display = "none";
+        console.log('Preprocesamiento completado:', data);
     })
     .catch(error => {
         console.error('Hubo un problema:', error);
