@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes y Estadísticas</title>
+    <style>
+        .contenedor {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .imagen {
+            width: 300px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h2>Reportes y Estadísticas</h2>
+    <div class="contenedor">
+        <img class="imagen" src="/graficos/caracteristicas20selectorRFE/figBacc_t.png" alt="grafico 1">
+        <img class="imagen" src="/graficos/caracteristicas20selectorRFE/figP_t.png" alt="grafico 2">
+        <img class="imagen" src="/graficos/caracteristicas20selectorRFE/figTRT_t.png" alt="grafico 3">
+        <img class="imagen" src="/graficos/caracteristicas20selectorRFE/figTST_t.png" alt="grafico 4">
+    </div>
+
+    <!-- <script>
+        const num_caract = 20
+        const imagenes = ["figCacc_t.png", "figP_t.png", "figTRT_t.png", "figTST_t.png"]; // Agrega más nombres si es necesario
+        const rutaBase = "/graficos/caracteristicas" + str(num_caract) + "selectorRFE"; // Carpeta donde están guardadas las imágenes
+        const contenedor = document.getElementById("contenedor");
+
+        imagenes.forEach(img => {
+            let imgElement = document.createElement("img");
+            imgElement.src = rutaBase + img;
+            imgElement.classList.add("imagen");
+            imgElement.alt = img;
+            contenedor.appendChild(imgElement);
+        });
+    </script> -->
+</body>
+</html>

@@ -20,6 +20,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import confusion_matrix
+import subprocess
 
 
 app = Flask(__name__)
@@ -275,6 +276,24 @@ def train():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+
+@app.route('/results', methods=['POST'])
+def generar_graficos():
+    try:
+        # Ejecutar el script que genera los gráficos
+        subprocess.run(['python', 'ProcesarResultados.py'], check=True)
+        
+        return jsonify({"mensaje": "Gráficos generados correctamente"}), 200
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": f"Error al generar gráficos: {str(e)}"}), 500
+
+@app.route('/visualizarResultados')
+def resultados():
+    IMAGENES_DIR = "./graficos/caracteristicas20selectorRFE"
+    imagenes = os.listdir(IMAGENES_DIR)
+    return render_template('reportes.html', imagenes=imagenes)
 
 if __name__ == '__main__':
     if not os.path.exists('uploads'):
