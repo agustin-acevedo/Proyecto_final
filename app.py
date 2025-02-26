@@ -21,6 +21,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import confusion_matrix
 import subprocess
+from flask import Flask, render_template, send_from_directory
 
 
 app = Flask(__name__)
@@ -289,13 +290,33 @@ def generar_graficos():
     except subprocess.CalledProcessError as e:
         return jsonify({"error": f"Error al generar gráficos: {str(e)}"}), 500
 
-@app.route('/visualizarResultados')
+
+IMAGENES_DIR = "./graficos/caracteristicas20selectorRFE"
+
+titulos_imagenes = {
+    "figBacc_t.png": "Comparación de Excantitud Balanceada de los modelos probados",
+    "figP_t.png": "Comparación de la precisión de los modelos probados",
+    "figTRT_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
+    "figTST_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
+    "tabDT-Metricas.png": "Metricas por clases para clasificador: Arboles de desicion",
+    "tabGBM-Metricas.png": "Metricas por clases para clasificador: GMB",
+    "tabRF-Metricas.png": "Metricas por clases para clasificador: Random Forest"  
+}
+
+
+@app.route('/resultados')
 def resultados():
-    IMAGENES_DIR = "./graficos/caracteristicas20selectorRFE"
     imagenes = os.listdir(IMAGENES_DIR)
-    return render_template('reportes.html', imagenes=imagenes)
+    imagenes_info = [{"nombre": img, "titulo": titulos_imagenes.get(img, "Título no disponible")} for img in imagenes]
+    return render_template('reportes.html', imagenes=imagenes_info)
+
+
+@app.route('/imagenes/<path:filename>')
+def imagenes(filename):
+    return send_from_directory(IMAGENES_DIR, filename)
 
 if __name__ == '__main__':
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
     app.run(debug=True)
+
