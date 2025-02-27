@@ -1,3 +1,5 @@
+<!-- Vista para visualizar las imagenes sobre metricas de rendimiento de los modelos utilizados.
+Se encontraran graficos sobre comparacion entre estos como asi tambien tablas individuales de cada uno de ellos  -->
 <!DOCTYPE html>
 <html lang="es">
 
@@ -23,7 +25,7 @@
             {% for img in imagenes %}
             <div class="imagen-container">
                 <h3>{{ img.titulo }}</h3>
-                <img src="{{ url_for('imagenes', filename=img.nombre) }}" class="imagen" alt="{{ img.titulo }}">
+                <img src="{{ url_for('imagenes', filename=img.nombre) }}" class="imagen" alt="{{ img.titulo }}"> 
             </div>
             {% endfor %}
         </div>
