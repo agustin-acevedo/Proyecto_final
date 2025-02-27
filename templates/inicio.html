@@ -43,15 +43,19 @@
                     <h2>Paso 1: Cargar Dataset</h2>
                     <p>Carga el conjunto de datos con el que desea trabajar.</p>
                     <input type="file" id="file-input">
-                    <button class="next-btn" onclick="goToStep(2)">Siguiente</button>
+                    <div>
+                        <button class="next-btn" onclick="goToStep(2)">Siguiente</button>
+                    </div>
                 </div>
 
                 <!-- Paso 3 -->
                 <div class="step" id="step-2" style="display: none;"">
                     <h2>Paso 2: Preprocesar Datos</h2>
                     <p>Al presionar en el boton "Siguiente" se iniciciara el preprocesamiento de los datos cargados.</p>
-                    <button class="prev-btn" onclick="goToStep(1)">Anterior</button>
-                    <button class="next-btn" onclick="goToStep(3)">Siguiente</button>
+                    <div>
+                        <button class="prev-btn" onclick="goToStep(1)">Anterior</button>
+                        <button class="next-btn" onclick="goToStep(3)">Siguiente</button>
+                    </div>
                 </div>
 
                 <div id="loading-message" class="loading-overlay" style="display: none;">
@@ -62,7 +66,7 @@
                 <div class="step active" id="step-3">
                     <h2>Paso 3: Evaluar Modelos</h2>
                     <label for="modelSelect">Elige un algoritmo:</label>
-                    <select id="modelSelect" name="model">
+                    <select id="modelSelect" name="model" style="width: 100%;">
                         <option value="DT">Arbol de desicion</option>
                         <option value="RF">Bosque Aleatorio (Enfoque Bagging)</option>
                         <option value="AdaBoost">Adaptive Boosting (Enfoque Boosting)</option>
@@ -71,8 +75,10 @@
                         <option value="LightGBM">Light Gradient Boosting Machine(Enfoque Boosting)</option>
                         <option value="VC">Voting Classifier (Enfoque Voting)</option>
                     </select>
-                    <button class="prev-btn" onclick="goToStep(2)">Anterior</button>
-                    <button class="next-btn" onclick="goToStep(4)">Siguiente</button>
+                    <div>
+                        <button class="prev-btn" onclick="goToStep(2)">Anterior</button>
+                        <button class="next-btn" onclick="goToStep(4)">Siguiente</button>
+                    </div>
                 </div>
 
                 <div id="loading-message-train" class="loading-overlay" style="display: none;">
@@ -82,15 +88,20 @@
                 <!-- Paso 4 -->
                 <div class="step" id="step-4">
                     <h2>Paso 4: Generar Resultados</h2>
+
                     <p>Pulsa "Siguiente" para empezar con el proceso de generar los graficos, reportes, estadisticas, etc.</p>
-                    <button class="next-btn" onclick="goToStep(5)">Siguiente</button>
+                    <div>
+                        <button class="next-btn" onclick="goToStep(5)">Siguiente</button>
+                    </div>
                 </div>
 
                 <!-- Paso 5 -->
                 <div class="step" id="step-4">
                     <h2>Paso 5: Resultados</h2>
                     <p>Pulsa "Ver resultados" para ver todos los resutados generados.</p>
-                    <button  onclick="window.location.href='/resultados'" class="next-btn">Ver Resultados</button>
+                    <div>
+                        <button  onclick="window.location.href='/resultados'" class="next-btn">Ver Resultados</button>
+                    </div>
                  
                 </div>
             </div>
