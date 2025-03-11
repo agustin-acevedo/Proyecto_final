@@ -43,10 +43,10 @@ y_test = np.loadtxt("./datos/caracteristicas" + str(num_caract) + "selector" + s
 le = pickle.load(open('./modelos/le.sav', 'rb'))
 
 # Inicializar el clasificador base
-base_clf = DecisionTreeClassifier(random_state=42)
+base_clf = DecisionTreeClassifier()
 
 # Crear el clasificador Bagging
-bagging_clf = BaggingClassifier(base_clf, n_estimators=50, random_state=42)
+bagging_clf = BaggingClassifier(base_clf, n_estimators=100,n_jobs=-1, random_state=42)
 
 #FASE DE ENTRENAMIENTO
 print ("FASE DE ENTRENAMIENTO")
