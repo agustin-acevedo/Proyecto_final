@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Paso 3 -->
-                <div class="step" id="step-2" style="display: none;"">
+                <div class="step" id="step-2" style="display: none;">
                     <h2>Paso 2: Preprocesar Datos</h2>
                     <p>Al presionar en el boton "Siguiente" se iniciciara el preprocesamiento de los datos cargados.</p>
                     <div>
@@ -67,13 +67,14 @@
                     <h2>Paso 3: Evaluar Modelos</h2>
                     <label for="modelSelect">Elige un algoritmo:</label>
                     <select id="modelSelect" name="model" style="width: 100%;">
-                        <option value="DT">Arbol de desicion</option>
+                        <!-- <option value="DT">Arbol de desicion</option>
                         <option value="RF">Bosque Aleatorio (Enfoque Bagging)</option>
                         <option value="AdaBoost">Adaptive Boosting (Enfoque Boosting)</option>
                         <option value="GBM">Gradient Boosting (Enfoque Boosting)</option>
                         <option value="XGBoost">Extreme Gradient Boosting (Enfoque Boosting)</option>
-                        <option value="LightGBM">Light Gradient Boosting Machine(Enfoque Boosting)</option>
-                        <option value="VC">Voting Classifier (Enfoque Voting)</option>
+                        <option value="LightGBM">Light Gradient Boosting Machine(Enfoque Boosting)</option> -->
+                        <option value="Bagging">Bagging</option>
+                        <option value="AdaBoost">AdaBoost</option>
                     </select>
                     <div>
                         <button class="prev-btn" onclick="goToStep(2)">Anterior</button>
