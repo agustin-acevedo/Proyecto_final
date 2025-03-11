@@ -31,24 +31,6 @@ app = Flask(__name__)
 def home():
     #return render_template('index.html')
     return render_template('inicio.html')
-# raw_data_test = list(reader)
-
-#     np_data_test = np.asarray(raw_data_test, dtype=None)
-
-#     X = np_data_test[:, 0:-2]  # Seleccionar todas las columnas menos las dos últimas
-#     y = np_data_test[:, -2]    # Seleccionar la penúltima columna (etiqueta como cadena)
-
-
-#@app.route('/upload', methods=['POST'])
-#def upload_file():
-#    if 'file' not in request.files:
-#        return jsonify({'error': 'No file uploaded'}), 400
-#
-#    file = request.files['file']
-#    if file:
-#        file.save(f'uploads/{file.filename}')  # Guardar el archivo en la carpeta 'uploads'
-#        return jsonify({'message': 'File uploaded successfully'}), 200
-#    return jsonify({'error': 'Invalid file'}), 400
 
 UPLOAD_FOLDER = 'uploads'  # Carpeta donde voy a guardar los csv subidos 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Crea la carpeta si no existe
@@ -74,7 +56,7 @@ def upload_file():
 #DECLARACIÓN CONSTANTES
 NUM_CARACT = [20]
 
-CLASIFICADORES = ['EnsembleLearning','Bagging','XGBoost']
+#CLASIFICADORES = ['EnsembleLearning','Bagging','XGBoost']
 
 @app.route('/preprocess', methods=['POST'])
 def preprocess_data():
@@ -292,16 +274,19 @@ def generar_graficos():
 
 
 IMAGENES_DIR = "./graficos/caracteristicas20selectorRFE"
+#CLASIFICADORES = np.array(['DT', 'GBM', 'RF'])
+CLASIFICADORES = np.array(['Bagging','AdaBoost'])
 
 titulos_imagenes = {
     "figBacc_t.png": "Comparación de Excantitud Balanceada de los modelos probados",
     "figP_t.png": "Comparación de la precisión de los modelos probados",
     "figTRT_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
     "figTST_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
-    "tabDT-Metricas.png": "Metricas por clases para clasificador: Arboles de desicion",
-    "tabGBM-Metricas.png": "Metricas por clases para clasificador: GMB",
-    "tabRF-Metricas.png": "Metricas por clases para clasificador: Random Forest"  
+    "tab"+CLASIFICADORES[0]+"-Metricas.png": "Metricas por clases para clasificador: Bagging",
+    "tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Ada Boost"
 }
+
+
 
 
 @app.route('/resultados')
