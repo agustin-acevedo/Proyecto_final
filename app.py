@@ -275,7 +275,7 @@ def generar_graficos():
 
 IMAGENES_DIR = "./graficos/caracteristicas20selectorRFE"
 #CLASIFICADORES = np.array(['DT', 'GBM', 'RF'])
-CLASIFICADORES = np.array(['Bagging','AdaBoost'])
+CLASIFICADORES = np.array(['Bagging','AdaBoost', 'RF','XGBoost'])
 
 titulos_imagenes = {
     "figBacc_t.png": "Comparación de Excantitud Balanceada de los modelos probados",
@@ -283,7 +283,9 @@ titulos_imagenes = {
     "figTRT_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
     "figTST_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
     "tab"+CLASIFICADORES[0]+"-Metricas.png": "Metricas por clases para clasificador: Bagging",
-    "tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Ada Boost"
+    "tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Ada Boost",
+    "tab"+CLASIFICADORES[2]+"-Metricas.png": "Metricas por clases para clasificador: Random Forest",
+    "tab"+CLASIFICADORES[3]+"-Metricas.png": "Metricas por clases para clasificador: Extreme Gradient Boosting"
 }
 
 
