@@ -35,7 +35,7 @@ import seaborn as sns
 #INICIO DEL PROGRAMA
 
 #CLASIFICADORES = np.array(['DT','NB','ANN','SVM','RF','GBM','VC'])
-CLASIFICADORES = np.array(['Bagging', 'AdaBoost'])
+CLASIFICADORES = np.array(['Bagging', 'AdaBoost','RF', 'XGBoost'])
 METRICAS = np.array(['Fscore','Precision','Sensibilidad','Total'])
 NUM_CARACT = [20]
 
