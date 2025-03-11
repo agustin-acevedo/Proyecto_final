@@ -1,6 +1,5 @@
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import balanced_accuracy_score
@@ -50,7 +49,7 @@ le = pickle.load(open('./modelos/le.sav', 'rb'))
 base_clf = DecisionTreeClassifier()
 
 # Creamos el clasificador AdaBoost
-adaboost_clf = AdaBoostClassifier(base_estimator=base_clf, n_estimators=50, learning_rate=1.0, random_state=42)
+adaboost_clf = AdaBoostClassifier(base_clf, n_estimators=50, learning_rate=1.0, random_state=42)
 
 #FASE DE ENTRENAMIENTO
 print ("FASE DE ENTRENAMIENTO")
