@@ -11,6 +11,8 @@ from sklearn import naive_bayes
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import VotingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import RFE
@@ -51,11 +53,29 @@ le = pickle.load(open('./modelos/le.sav', 'rb'))
 
 
 
-#SELECCION DE CLASIFICADOR
-clf1 = tree.DecisionTreeClassifier()
-clf2 = naive_bayes.ComplementNB()
-clf3 = neural_network.MLPClassifier(solver='lbfgs', alpha=1e-5,hidden_layer_sizes=(int(num_caract)), random_state=1, max_iter=10000)
-eclf = VotingClassifier(estimators=[('dt', clf1),  ('nb', clf2), ('ann', clf3)],voting='soft',n_jobs=-1)
+# #SELECCION DE CLASIFICADOR
+# clf1 = tree.DecisionTreeClassifier()
+# clf2 = naive_bayes.ComplementNB()
+# clf3 = neural_network.MLPClassifier(solver='lbfgs', alpha=1e-5,hidden_layer_sizes=(int(num_caract)), random_state=1, max_iter=10000)
+# eclf = VotingClassifier(estimators=[('dt', clf1),  ('nb', clf2), ('ann', clf3)],voting='soft',n_jobs=-1)
+
+# Modelos base
+rf_clf = RandomForestClassifier(n_estimators=100, max_depth=10, n_jobs=-1, random_state=42)
+gb_clf = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, random_state=42)
+lr_clf = LogisticRegression(max_iter=200, n_jobs=-1)
+svm_clf = SVC(kernel="rbf", probability=True, random_state=42)  # Probabilidad para voting="soft"
+
+# Configurar el VotingClassifier con votación suave
+voting_clf = VotingClassifier(
+    estimators=[
+        ('rf', rf_clf),
+        ('gb', gb_clf),
+        ('lr', lr_clf),
+        ('svm', svm_clf)
+    ],
+    voting="soft",  # Cambia a "hard" si prefieres votación mayoritaria
+    weights=[2, 3, 1, 1]  # Mayor peso a RF y GB si funcionan mejor
+)
 
 
 #PREPROCESAMIENTO
@@ -76,7 +96,7 @@ X_test = scaler.transform(X_test)
 #FASE DE ENTRENAMIENTO
 print ("FASE DE ENTRENAMIENTO")
 t_inicio_entrenamiento = time.time()
-eclf.fit(X_train, y_train)
+voting_clf.fit(X_train, y_train)
 t_fin_entrenamiento = time.time()
 
 print ("Training time: " + str(t_fin_entrenamiento - t_inicio_entrenamiento))
@@ -86,7 +106,7 @@ print ("Training time: " + str(t_fin_entrenamiento - t_inicio_entrenamiento))
 #FASE DE CLASIFICACIÓN
 print ("FASE DE CLASIFICACIÓN")
 t_inicio_clasif = time.time()
-y_pred = eclf.predict(X_test)
+y_pred = voting_clf.predict(X_test)
 t_fin_clasif = time.time()
 
 print ("Testing time: " + str(t_fin_clasif - t_inicio_clasif))
