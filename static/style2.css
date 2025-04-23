@@ -34,10 +34,10 @@
   }
 
   main {
-      display: flex;
+
       /* Activa Flexbox */
       /*flex-direction: column;*/
-      align-items: center;
+    
       /* Centra verticalmente */
       /* justify-content: center; */
       height: 100%;

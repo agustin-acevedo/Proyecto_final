@@ -63,12 +63,12 @@ clasificador = GradientBoostingClassifier()
 print("PREPROCESAMIENTO")
 
 #Normalizamos
-#X_train = preprocessing.normalize(X_train)
-#X_test = preprocessing.normalize(X_test)
+X_train = preprocessing.normalize(X_train)
+X_test = preprocessing.normalize(X_test)
 
 #Escalamos
-#X_train = preprocessing.scale(X_train)
-#X_test = preprocessing.scale(X_test)
+X_train = preprocessing.scale(X_train)
+X_test = preprocessing.scale(X_test)
 
 
 

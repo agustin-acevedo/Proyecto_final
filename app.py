@@ -8,7 +8,6 @@ import numpy as np
 import pickle
 import codecs
 import sys
-import numpy as np
 import csv
 import time
 from sklearn import tree
@@ -35,26 +34,45 @@ def home():
 UPLOAD_FOLDER = 'uploads'  # Carpeta donde voy a guardar los csv subidos 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Crea la carpeta si no existe
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
+@app.route('/upload-datasets', methods=['POST'])
+def upload_datasets():
+    try:
+        train_file = request.files.get('trainFile')
+        test_file = request.files.get('testFile')
 
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+        if not train_file or not test_file:
+            return jsonify({'error': 'Faltan uno o ambos archivos'}), 400
 
-    # Guarda el archivo en el servidor
-    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(file_path)
+        train_path = os.path.join(UPLOAD_FOLDER, 'train.csv')
+        test_path = os.path.join(UPLOAD_FOLDER, 'test.csv')
 
-    # Devuelve la ruta del archivo
-    return jsonify({'filePath': file_path}), 200
+        train_file.save(train_path)
+        test_file.save(test_path)
+
+        return jsonify({'success': True,'filePath': train_path, 'testPath': test_path}), 200
+    except Exception as e:
+        return jsonify({'filePath': train_file, 'testFile': test_file}), 500
+
+# @app.route('/upload', methods=['POST'])
+# def upload_file():
+#     if 'file' not in request.files:
+#         return jsonify({'error': 'No file part'}), 400
+
+#     file = request.files['file']
+#     if file.filename == '':
+#         return jsonify({'error': 'No selected file'}), 400
+
+#     # Guarda el archivo en el servidor
+#     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+#     file.save(file_path)
+
+#     # Devuelve la ruta del archivo
+#     return jsonify({'filePath': file_path}), 200
 
 
 
 #DECLARACIÓN CONSTANTES
-NUM_CARACT = [20]
+NUM_CARACT = [5]
 
 #CLASIFICADORES = ['EnsembleLearning','Bagging','XGBoost']
 
@@ -62,58 +80,88 @@ NUM_CARACT = [20]
 def preprocess_data():
     data = request.get_json()
     file_path = data.get('filePath')
-
-    if not file_path or not os.path.exists(file_path):
+    file_path_test = data.get('rutaTest')
+    if not file_path or not  file_path_test:
         return jsonify({'error': 'Archivo no encontrado'}), 400
     
     try:
-        print ("LECTURA DE FICHERO")
-        with codecs.open(file_path, "r", encoding="utf-8-sig") as f:
-            reader = csv.reader(f, delimiter=",")
-            raw_data = list(reader)
+        print ("LECTURA DE FICHEROS")
+        df_train = pd.read_csv(file_path, header=None)
+        # with codecs.open(file_path, "r", encoding="utf-8-sig") as f:
+        #     reader = csv.reader(f, delimiter=",")
+        #     raw_data = list(reader)
+        df_test = pd.read_csv(file_path_test, header=None)
+        # with codecs.open(file_path_test, "r", encoding="utf-8-sig") as f:
+        #     reader_test = csv.reader(f, delimiter=",")
+        #     raw_data_test = list(reader_test)
         
-        np_data_training = np.asarray(raw_data, dtype=None)
+        # Eliminar filas y columnas irrelevantes para el conjunto de datos de entrenamiento
+        print(df_train.columns)
+        duplicados_train = df_train.duplicated()
+        print("Cantidad de filas duplicadas en el conjunto de datos de entrenamiento:", duplicados_train.sum())
 
-        X = np_data_training[:, 0:-2]  # Seleccionar todas las columnas menos las dos últimas
-        y = np_data_training[:, -2]    # Seleccionar la penúltima columna (etiqueta como cadena)
+        # # Eliminar columnas irrelevantes
+        df_train = df_train.drop(df_train.columns[0], axis=1) # Columna que hace referencia al ID
         
+        # Eliminar filas y columnas irrelevantes para el conjunto de datos de test
+        print(df_test.columns)
+        duplicados_test = df_test.duplicated()
+        print("Cantidad de filas duplicadas en el conjunto de datos de entrenamiento:", duplicados_test.sum())
+
+        # # Eliminar columnas irrelevantes
+        df_test = df_test.drop(df_test.columns[0], axis=1) # Columna que hace referencia al ID
+        
+        np_data_training = np.asarray(df_train, dtype=None)
+        np_data_test = np.asarray(df_test, dtype=None)
+        
+        X_train = np_data_training[:, 0:-2]  # Seleccionar todas las columnas menos las dos últimas en el conjunto de datos de entrenamiento
+        y_train = np_data_training[:, -2]    # Seleccionar la penúltima columna (etiqueta como cadena) en el conjunto de datos de entrenamiento
+        X_test = np_data_test[:, 0:-2]  # Seleccionar todas las columnas menos las dos últimas en el conjunto de datos de test
+        y_test = np_data_test[:, -2]    # Seleccionar la penúltima columna (etiqueta como cadena) en el conjunto de datos de test
         print("INICIO DEL PREPROCESAMIENTO")
 
-        # Asumimos que las columnas categóricas están en las posiciones 1, 2 y 3, pero pueden variar según tu dataset
+    
         # Si hay más columnas categóricas, puedes añadirlas al mismo proceso
         le = preprocessing.LabelEncoder()
 
-        # Identificar columnas categóricas que necesitan transformación (por ejemplo, columnas 1, 2, 3)
-        columnas_categoricas = [2, 3, 4]
+        # Identificar columnas categóricas que necesitan transformación (por ejemplo, columnas 1, 2, 3 que son datos no numericos)
+        columnas_categoricas = [1, 2, 3] 
 
         for col in columnas_categoricas:
-            X[:, col] = le.fit_transform(X[:, col].astype(str))
+            X_train[:, col] = le.fit_transform(X_train[:, col].astype(str))
+            # X_train[:, col] = le.fit_transform(X_train[:, col].astype(str))
+        
+        for col in columnas_categoricas:
+            X_test[:, col] = le.fit_transform(X_test[:, col].astype(str))
             # X_train[:, col] = le.fit_transform(X_train[:, col].astype(str))
 
-        # Asegúrate de que las demás columnas de X_test y X_train sean numéricas
-        # Si hay columnas que siguen teniendo valores no numéricos, tendrás que aplicar la transformación también
 
         # Convertir las demás columnas a float
-        for col in range(X.shape[1]):
+        for col in range(X_train.shape[1]):
             if col not in columnas_categoricas:
-                X[:, col] = X[:, col].astype(float)
+                X_train[:, col] = X_train[:, col].astype(float)
+                # X_train[:, col] = X_train[:, col].astype(float)
+        
+        for col in range(X_test.shape[1]):
+            if col not in columnas_categoricas:
+                X_test[:, col] = X_test[:, col].astype(float)
                 # X_train[:, col] = X_train[:, col].astype(float)
 
-        y = le.fit_transform(y)
-        # y_train = le.fit_transform(y_train)
+        y_test = le.fit_transform(y_test)
+        y_train = le.fit_transform(y_train)
 
         # Eliminamos NAN y convertimos los valores a float
-        X = np.nan_to_num(X.astype(float))
-        # X_train = np.nan_to_num(X_train.astype(float))
-        y = np.nan_to_num(y.astype(float))
-        # y_train = np.nan_to_num(y_train.astype(float))
+        X_train = np.nan_to_num(X_train.astype(float))
+        X_test = np.nan_to_num(X_test.astype(float))
+        y_train = np.nan_to_num(y_train.astype(float))
+        y_test = np.nan_to_num(y_test.astype(float))
 
 
 
 
         #DIVISIÓN DEL DATASET
         print ("El conjunto de datos se esta dividiendo..")
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+       # X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
         print ("X_train, y_train:", X_train.shape, y_train.shape)
         print ("X_test, y_test:", X_test.shape, y_test.shape)
         
@@ -151,11 +199,11 @@ def preprocess_data():
             # SELECCION DE CARACTERÍSTICAS
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS")
             estimador = tree.DecisionTreeClassifier()
-            selector1 = RFE(estimador, n_features_to_select= 20, step=1)
+            selector1 = RFE(estimador, n_features_to_select= NUM_CARACT[0], step=1)
             #selector2 = PCA(n_components=int(num))
 
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR RFE")
-            selector1 = selector1.fit(X_test, y_test)
+            selector1 = selector1.fit(X_train, y_train)
             print (selector1.ranking_)
 
             #print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR PCA")
@@ -221,7 +269,6 @@ def preprocess_data():
         return jsonify({'message': 'Error durante el preprocesamiento', 'status': 'error'}), 500
 
 
-
 # Ruta para entrenar el modelo
 @app.route('/train', methods=['POST'])
 def train():
@@ -273,19 +320,24 @@ def generar_graficos():
         return jsonify({"error": f"Error al generar gráficos: {str(e)}"}), 500
 
 
-IMAGENES_DIR = "./graficos/caracteristicas20selectorRFE"
+IMAGENES_DIR = "./graficos/caracteristicas"+str(NUM_CARACT[0])+"selectorRFE"
 #CLASIFICADORES = np.array(['DT', 'GBM', 'RF'])
-CLASIFICADORES = np.array(['Bagging','AdaBoost', 'RF','XGBoost'])
-
+#CLASIFICADORES = np.array(['RF', 'XGBoost', 'DT', 'Bagging'])
+CLASIFICADORES = np.array(['DT','RF'])
 titulos_imagenes = {
     "figBacc_t.png": "Comparación de Excantitud Balanceada de los modelos probados",
     "figP_t.png": "Comparación de la precisión de los modelos probados",
     "figTRT_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
     "figTST_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
-    "tab"+CLASIFICADORES[0]+"-Metricas.png": "Metricas por clases para clasificador: Bagging",
-    "tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Ada Boost",
-    "tab"+CLASIFICADORES[2]+"-Metricas.png": "Metricas por clases para clasificador: Random Forest",
-    "tab"+CLASIFICADORES[3]+"-Metricas.png": "Metricas por clases para clasificador: Extreme Gradient Boosting"
+    "tab"+CLASIFICADORES[0]+"-Metricas.png": "Metricas por clases para clasificador: Desicion Tree",
+    "tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Random Forest",
+    #"tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Extreme Gradient Boosting",
+    #"tab"+CLASIFICADORES[2]+"-Metricas.png": "Metricas por clases para clasificador: Arbol de desicion",
+     #"tab"+CLASIFICADORES[3]+"-Metricas.png": "Metricas por clases para clasificador: Bagging"
+  
+    # "tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Ada Boost",
+    # "tab"+CLASIFICADORES[2]+"-Metricas.png": "Metricas por clases para clasificador: Random Forest",
+    # "tab"+CLASIFICADORES[3]+"-Metricas.png": "Metricas por clases para clasificador: Extreme Gradient Boosting"
 }
 
 

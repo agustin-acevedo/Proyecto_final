@@ -1,3 +1,3 @@
 [['Analysis' 'Backdoor' 'DoS' 'Exploits' 'Fuzzers' 'Generic' 'Normal'
   'Reconnaissance' 'Shellcode' 'Worms']
- ['518' '428' '3094' '8396' '4469' '10057' '13962' '2598' '281' '33']]
+ [677 583 4089 11132 6062 18871 37000 3496 378 44]]

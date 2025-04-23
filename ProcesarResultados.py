@@ -35,12 +35,13 @@ import seaborn as sns
 #INICIO DEL PROGRAMA
 
 #CLASIFICADORES = np.array(['DT','NB','ANN','SVM','RF','GBM','VC'])
-CLASIFICADORES = np.array(['Bagging', 'AdaBoost','RF', 'XGBoost'])
+#CLASIFICADORES = np.array(['RF', 'XGBoost', 'DT','Bagging'])
+CLASIFICADORES = np.array(['DT', 'RF'])
 METRICAS = np.array(['Fscore','Precision','Sensibilidad','Total'])
-NUM_CARACT = [20]
+NUM_CARACT = [5]
 
 #LECTURA DE ARGUMENTOS
-num_caract = 20
+num_caract = 5
 selector = 'RFE'
 print("ARGUMENTOS: num_caract=" + str(num_caract) + " selector=" + str(selector))
 

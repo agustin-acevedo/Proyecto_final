@@ -55,7 +55,7 @@ le = pickle.load(open('./modelos/le.sav', 'rb'))
 
 
 #SELECCION DE CLASIFICADOR
-clasificador = tree.DecisionTreeClassifier()
+clasificador = tree.DecisionTreeClassifier() #Parametos arrojados por GridSearchCV: criterion= 'gini', max_depth= 15, min_samples_leaf= 5, min_samples_split= 2
 
 
 

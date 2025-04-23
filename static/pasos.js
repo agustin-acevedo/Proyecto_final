@@ -84,48 +84,79 @@ function goToStep(step) {
 ¨*/
 function goToStep(step) {
     if (step === 2) {
-        const fileInput = document.getElementById('file-input');
-        const file = fileInput.files[0];
-
-        if (!file) {
-            alert('Por favor, selecciona un archivo primero.');
+        const trainFile = document.getElementById('trainFile').files[0];
+        const testFile = document.getElementById('testFile').files[0];
+    
+        if (!trainFile || !testFile) {
+            alert("Por favor, selecciona ambos archivos.");
             return;
         }
-
+    
         const formData = new FormData();
-        formData.append('file', file);
-
-        // Envía el archivo al backend
-        fetch('/upload', { // Cambia '/upload' según tu endpoint
+        formData.append('trainFile', trainFile);
+        formData.append('testFile', testFile);
+    
+        fetch('/upload-datasets', {
             method: 'POST',
-            body: formData,
+            body: formData
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.json(); // Espera la ruta del archivo en la respuesta
-                } else {
-                    throw new Error('Error al subir el archivo.');
-                }
-            })
-            .then(data => {
-                console.log('Archivo subido con éxito:', data.filePath);
-                alert('Archivo subido correctamente.');
-                // Llama a goToStep para avanzar al preprocesamiento
-                //goToStep(3, data.filePath);
-
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Archivos subidos correctamente");
+               // goToStep(3); // Ir al siguiente paso
                 ruta = data.filePath
-            })
-            .catch(error => {
-                console.error('Error en la solicitud:', error);
-                alert('Hubo un problema al subir el archivo.');
-            });
+                rutaTest = data.testPath
+            } else {
+                alert("Error al subir archivos: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error en la carga:", error);
+        });
+        // const fileInput = document.getElementById('file-input');
+        // const file = fileInput.files[0];
+
+        // if (!file) {
+        //     alert('Por favor, selecciona un archivo primero.');
+        //     return;
+        // }
+
+        // const formData = new FormData();
+        // formData.append('file', file);
+
+        // // Envía el archivo al backend
+        // fetch('/upload', { // Cambia '/upload' según tu endpoint
+        //     method: 'POST',
+        //     body: formData,
+        // })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             return response.json(); // Espera la ruta del archivo en la respuesta
+        //         } else {
+        //             throw new Error('Error al subir el archivo.');
+        //         }
+        //     })
+        //     .then(data => {
+        //         console.log('Archivo subido con éxito:', data.filePath);
+        //         alert('Archivo subido correctamente.');
+        //         // Llama a goToStep para avanzar al preprocesamiento
+        //         //goToStep(3, data.filePath);
+
+        //         ruta = data.filePath
+        //     })
+        //     .catch(error => {
+        //         console.error('Error en la solicitud:', error);
+        //         alert('Hubo un problema al subir el archivo.');
+        //     });
     } else {
         if (step === 3) {
             //LOGICA PARA CONECTAR CON EL BACKEND DEL PREPROCESAMIENTO 
-            preprocesarDatos(ruta, () => {
+            preprocesarDatos(ruta, rutaTest, () => {
                 // Avanza al siguiente paso después del preprocesamiento
                 //showStep(4);
             });
+
         } else {
             if (step === 4) {
                 trainModel();
@@ -151,8 +182,8 @@ function showStep(step) {
 
 
 
-function preprocesarDatos(filePath, callback) {
-    if (!filePath) {
+function preprocesarDatos(filePath,rutaTest, callback) {
+    if (!filePath || !rutaTest) {
         alert('No se encontró la ruta del archivo para procesar.');
         return;
     }
@@ -188,7 +219,7 @@ function preprocesarDatos(filePath, callback) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ filePath }),
+        body: JSON.stringify({ filePath, rutaTest }),
     })
         .then(response => {
             if (response.ok) {
@@ -214,6 +245,70 @@ function preprocesarDatos(filePath, callback) {
             loadingMessage.style.display = "none";
         });
 }
+
+// function preprocesarDatosTest(testFile, callback) {
+//     if (!testFile) {
+//         alert('No se encontró la ruta del archivo para procesar.');
+//         return;
+//     }
+
+//     // Muestra un mensaje al usuario mientras se procesa
+//     const messages = [
+//         "Empezando el procesamiento...",
+//         "Dividiendo el conjunto de datos...",
+//         "Aplicando transformaciones...",
+//         "Generando resultados y guardando...",
+//         "Ya casi esta listo..."
+//     ];
+
+//     let index = 0;
+//     const loadingText = document.getElementById("loading-text");
+//     const loadingMessage = document.getElementById("loading-message");
+
+//     // Mostrar el overlay de carga
+//     loadingMessage.style.display = "flex";
+
+//     // Actualizar el mensaje cada 4 segundos
+//     const intervalId = setInterval(() => {
+//         if (index < messages.length) {
+//             loadingText.textContent = messages[index];
+//             index++;
+//         } else {
+//             clearInterval(intervalId);
+//         }
+//     }, 4000);
+//     // Envía la ruta del archivo al backend
+//     fetch('/preprocess_Test', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ testFile }),
+//     })
+//         .then(response => {
+//             if (response.ok) {
+//                 return response.json();
+//             } else {
+//                 throw new Error('Error durante el preprocesamiento.');
+//             }
+//         })
+//         .then(data => {
+//             //console.log('Preprocesamiento completado:', data);
+//             //alert('Preprocesamiento completado con éxito.');
+//             // Ocultar el overlay al completar
+//             clearInterval(intervalId);
+//             loadingMessage.style.display = "none";
+//             console.log('Preprocesamiento completado:', data);
+//             if (callback) callback();
+//         })
+//         .catch(error => {
+//             console.error('Error en la solicitud:', error);
+//             // alert('Hubo un problema durante el preprocesamiento.');
+//             // Ocultar el overlay al completar
+//             clearInterval(intervalId);
+//             loadingMessage.style.display = "none";
+//         });
+// }
 
 let globalModelo = modelSelect.value; // Lo que realizo es guardar el modelo seleccionado para usarlo en la funicon de generar grafica
 function trainModel() {
