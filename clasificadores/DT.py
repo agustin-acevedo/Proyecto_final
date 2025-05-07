@@ -55,24 +55,11 @@ le = pickle.load(open('./modelos/le.sav', 'rb'))
 
 
 #SELECCION DE CLASIFICADOR
-clasificador = tree.DecisionTreeClassifier() #Parametos arrojados por GridSearchCV: criterion= 'gini', max_depth= 15, min_samples_leaf= 5, min_samples_split= 2
-
-
+clasificador = tree.DecisionTreeClassifier(criterion= 'entropy') #Parametos arrojados por GridSearchCV: 'criterion': 'entropy', 'max_depth': None, 'min_samples_leaf': 2, 'min_samples_split': 10, 'random_state': 42
 
 
 #PREPROCESAMIENTO
 print("PREPROCESAMIENTO")
-
-#Normalizamos
-#X_train = preprocessing.normalize(X_train)
-#X_test = preprocessing.normalize(X_test)
-
-#Escalamos
-#X_train = preprocessing.scale(X_train)
-#X_test = preprocessing.scale(X_test)
-
-
-
 
 #FASE DE ENTRENAMIENTO
 print ("FASE DE ENTRENAMIENTO")

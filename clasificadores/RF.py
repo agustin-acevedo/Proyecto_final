@@ -54,23 +54,13 @@ le = pickle.load(open('./modelos/le.sav', 'rb'))
 
 
 #SELECCION DE CLASIFICADOR
-clasificador = RandomForestClassifier()
+clasificador = RandomForestClassifier(criterion='entropy')
 
 
 
 
 #PREPROCESAMIENTO
 print("PREPROCESAMIENTO")
-
-#Normalizamos
-#X_train = preprocessing.normalize(X_train)
-#X_test = preprocessing.normalize(X_test)
-
-#Escalamos
-#X_train = preprocessing.scale(X_train)
-#X_test = preprocessing.scale(X_test)
-
-
 
 
 #FASE DE ENTRENAMIENTO

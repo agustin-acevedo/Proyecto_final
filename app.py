@@ -28,7 +28,6 @@ app = Flask(__name__)
 # Ruta principal para la página de inicio
 @app.route('/')
 def home():
-    #return render_template('index.html')
     return render_template('inicio.html')
 
 UPLOAD_FOLDER = 'uploads'  # Carpeta donde voy a guardar los csv subidos 
@@ -53,47 +52,22 @@ def upload_datasets():
     except Exception as e:
         return jsonify({'filePath': train_file, 'testFile': test_file}), 500
 
-# @app.route('/upload', methods=['POST'])
-# def upload_file():
-#     if 'file' not in request.files:
-#         return jsonify({'error': 'No file part'}), 400
-
-#     file = request.files['file']
-#     if file.filename == '':
-#         return jsonify({'error': 'No selected file'}), 400
-
-#     # Guarda el archivo en el servidor
-#     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-#     file.save(file_path)
-
-#     # Devuelve la ruta del archivo
-#     return jsonify({'filePath': file_path}), 200
-
-
-
 #DECLARACIÓN CONSTANTES
 NUM_CARACT = [5]
-
-#CLASIFICADORES = ['EnsembleLearning','Bagging','XGBoost']
 
 @app.route('/preprocess', methods=['POST'])
 def preprocess_data():
     data = request.get_json()
-    file_path = data.get('filePath')
-    file_path_test = data.get('rutaTest')
+    file_path = data.get('filePath') #Obtiene la ruta del conjunto de datos de entrenamiento 
+    file_path_test = data.get('rutaTest') #Obtiene la ruta del conjunto de datos de prueba
     if not file_path or not  file_path_test:
         return jsonify({'error': 'Archivo no encontrado'}), 400
     
     try:
         print ("LECTURA DE FICHEROS")
-        df_train = pd.read_csv(file_path, header=None)
-        # with codecs.open(file_path, "r", encoding="utf-8-sig") as f:
-        #     reader = csv.reader(f, delimiter=",")
-        #     raw_data = list(reader)
-        df_test = pd.read_csv(file_path_test, header=None)
-        # with codecs.open(file_path_test, "r", encoding="utf-8-sig") as f:
-        #     reader_test = csv.reader(f, delimiter=",")
-        #     raw_data_test = list(reader_test)
+        df_train = pd.read_csv(file_path, header=None)  #Lee la ruta del conjunto de datos de entrenamiento 
+       
+        df_test = pd.read_csv(file_path_test, header=None) #Lee la ruta del conjunto de datos de prueba
         
         # Eliminar filas y columnas irrelevantes para el conjunto de datos de entrenamiento
         print(df_train.columns)
@@ -121,7 +95,7 @@ def preprocess_data():
         print("INICIO DEL PREPROCESAMIENTO")
 
     
-        # Si hay más columnas categóricas, puedes añadirlas al mismo proceso
+        # Creamos el modelo a utilizar para eliminar las columnas categoricas
         le = preprocessing.LabelEncoder()
 
         # Identificar columnas categóricas que necesitan transformación (por ejemplo, columnas 1, 2, 3 que son datos no numericos)
@@ -129,23 +103,20 @@ def preprocess_data():
 
         for col in columnas_categoricas:
             X_train[:, col] = le.fit_transform(X_train[:, col].astype(str))
-            # X_train[:, col] = le.fit_transform(X_train[:, col].astype(str))
         
         for col in columnas_categoricas:
             X_test[:, col] = le.fit_transform(X_test[:, col].astype(str))
-            # X_train[:, col] = le.fit_transform(X_train[:, col].astype(str))
 
 
         # Convertir las demás columnas a float
         for col in range(X_train.shape[1]):
             if col not in columnas_categoricas:
                 X_train[:, col] = X_train[:, col].astype(float)
-                # X_train[:, col] = X_train[:, col].astype(float)
-        
+              
         for col in range(X_test.shape[1]):
             if col not in columnas_categoricas:
                 X_test[:, col] = X_test[:, col].astype(float)
-                # X_train[:, col] = X_train[:, col].astype(float)
+                
 
         y_test = le.fit_transform(y_test)
         y_train = le.fit_transform(y_train)
@@ -160,7 +131,6 @@ def preprocess_data():
 
 
         #DIVISIÓN DEL DATASET
-        print ("El conjunto de datos se esta dividiendo..")
        # X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
         print ("X_train, y_train:", X_train.shape, y_train.shape)
         print ("X_test, y_test:", X_test.shape, y_test.shape)
@@ -200,44 +170,31 @@ def preprocess_data():
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS")
             estimador = tree.DecisionTreeClassifier()
             selector1 = RFE(estimador, n_features_to_select= NUM_CARACT[0], step=1)
-            #selector2 = PCA(n_components=int(num))
-
+          
             print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR RFE")
             selector1 = selector1.fit(X_train, y_train)
             print (selector1.ranking_)
 
-            #print ("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS, " + "SELECTOR PCA")
-            #selector2 = selector2.fit(X_train, y_train)
-
-
             X_train1 = selector1.transform(X_train)
             X_test1 = selector1.transform(X_test)
-            #X_train2 = selector2.transform(X_train)
-            #X_test2 = selector2.transform(X_test)
 
             # CREAR DIRECTORIOS PARA GUARDAR DATOS PROCESADOS
             if not os.path.exists("./datos/caracteristicas" + str(num) + "selectorRFE"):
                 os.mkdir("./datos/caracteristicas" + str(num) + "selectorRFE")
-            # if not os.path.exists("./datos/caracteristicas" + str(num) + "selectorPCA"):
-            #     os.mkdir("./datos/caracteristicas" + str(num) + "selectorPCA")
+        
 
             #CREAR DIRECTORIOS PARA GUARDAR RESULTADOS
             if not os.path.exists("./resultados"):
                 os.mkdir("./resultados")
             if not os.path.exists("./resultados/caracteristicas" + str(num) + "selectorRFE"):
                 os.mkdir("./resultados/caracteristicas" + str(num) + "selectorRFE")
-            # if not os.path.exists("./resultados/caracteristicas" + str(num) + "selectorPCA"):
-            #     os.mkdir("./resultados/caracteristicas" + str(num) + "selectorPCA")
-
+           
             #CREAR DIRECTORIOS PARA GUARDAR GRÁFICAS
             if not os.path.exists("./graficos"):
                 os.mkdir("./graficos")
             if not os.path.exists("./graficos/caracteristicas" + str(num) + "selectorRFE"):
                 os.mkdir("./graficos/caracteristicas" + str(num) + "selectorRFE")
-            # if not os.path.exists("./graficos/caracteristicas" + str(num) + "selectorPCA"):
-            #     os.mkdir("./graficos/caracteristicas" + str(num) + "selectorPCA")
-
-
+          
             #GUARDAR EN DISCO
             np.savetxt("./datos/caracteristicas" + str(num) + "selectorRFE/X_train.csv", X_train1, delimiter=',')
             np.savetxt("./datos/caracteristicas" + str(num) + "selectorRFE/y_train.csv", y_train, delimiter=',')
@@ -245,12 +202,6 @@ def preprocess_data():
             np.savetxt("./datos/caracteristicas" + str(num) + "selectorRFE/y_test.csv", y_test, delimiter=',')
             with open("./datos/caracteristicas" + str(num) + "selectorRFE/ranking.npy",'wb') as f:
                 np.save(f, selector1.ranking_)
-
-
-            # np.savetxt("./datos/caracteristicas" + str(num) + "selectorPCA/X_train.csv", X_train2, delimiter=',')
-            # np.savetxt("./datos/caracteristicas" + str(num) + "selectorPCA/y_train.csv", y_train, delimiter=',')
-            # np.savetxt("./datos/caracteristicas" + str(num) + "selectorPCA/X_test.csv", X_test2, delimiter=',')
-            # np.savetxt("./datos/caracteristicas" + str(num) + "selectorPCA/y_test.csv", y_test, delimiter=',')
 
 
         #CREAR DIRECTORIO PARA GUARDAR MODELOS
@@ -281,13 +232,10 @@ def train():
         return jsonify({'error': 'No se recibió el modelo seleccionado'}), 400
     
     try:
-        #TESTEAR LOS CLASIFICADORES
         print("TESTEAR EL CLASIFICADOR")
         if os.path.exists('./resultados/descr_general.dat'):
             os.remove('./resultados/descr_general.dat')
         for num in NUM_CARACT:
-            # if os.path.exists("./resultados/caracteristicas" + str(num) + "selectorPCA/bacc_caracteristicasSelector.dat"):
-            #   os.remove("./resultados/caracteristicas" + str(num) + "selectorPCA/bacc_caracteristicasSelector.dat")
             if os.path.exists("./resultados/caracteristicas" + str(num) + "selectorRFE/bacc_caracteristicasSelector.dat"):
                 os.remove("./resultados/caracteristicas" + str(num) + "selectorRFE/bacc_caracteristicasSelector.dat")
 
@@ -296,8 +244,6 @@ def train():
             script = script_descriptor.read()
             sys.argv = [str(model_name) + ".py", int(num), 'RFE']
             exec(script)
-            # sys.argv = [str(model_name) + ".py", int(num), 'PCA']
-            # exec(script)
 
         # Enviar el resultado al frontend
         return jsonify({
@@ -313,7 +259,7 @@ def train():
 def generar_graficos():
     try:
         # Ejecutar el script que genera los gráficos
-        subprocess.run(['python', 'ProcesarResultados.py'], check=True)
+        subprocess.run(['python', 'GenerarGraficos.py'], check=True)
         
         return jsonify({"mensaje": "Gráficos generados correctamente"}), 200
     except subprocess.CalledProcessError as e:
@@ -321,9 +267,8 @@ def generar_graficos():
 
 
 IMAGENES_DIR = "./graficos/caracteristicas"+str(NUM_CARACT[0])+"selectorRFE"
-#CLASIFICADORES = np.array(['DT', 'GBM', 'RF'])
-#CLASIFICADORES = np.array(['RF', 'XGBoost', 'DT', 'Bagging'])
-CLASIFICADORES = np.array(['DT','RF'])
+CLASIFICADORES = np.array(['DT','RF','Bagging']) 
+
 titulos_imagenes = {
     "figBacc_t.png": "Comparación de Excantitud Balanceada de los modelos probados",
     "figP_t.png": "Comparación de la precisión de los modelos probados",
@@ -331,13 +276,7 @@ titulos_imagenes = {
     "figTST_t.png": "Comparación del tiempo de entrenamiento de los modelos probados",
     "tab"+CLASIFICADORES[0]+"-Metricas.png": "Metricas por clases para clasificador: Desicion Tree",
     "tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Random Forest",
-    #"tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Extreme Gradient Boosting",
-    #"tab"+CLASIFICADORES[2]+"-Metricas.png": "Metricas por clases para clasificador: Arbol de desicion",
-     #"tab"+CLASIFICADORES[3]+"-Metricas.png": "Metricas por clases para clasificador: Bagging"
-  
-    # "tab"+CLASIFICADORES[1]+"-Metricas.png": "Metricas por clases para clasificador: Ada Boost",
-    # "tab"+CLASIFICADORES[2]+"-Metricas.png": "Metricas por clases para clasificador: Random Forest",
-    # "tab"+CLASIFICADORES[3]+"-Metricas.png": "Metricas por clases para clasificador: Extreme Gradient Boosting"
+    "tab"+CLASIFICADORES[2]+"-Metricas.png": "Metricas por clases para clasificador: Bagging"
 }
 
 

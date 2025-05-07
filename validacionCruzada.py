@@ -9,7 +9,7 @@ import numpy as np
 from sklearn import preprocessing
 
 # Cargar el dataset
-df = pd.read_csv("./uploads/UNSW_NB15_training-set.csv", header=None)
+df = pd.read_csv("./uploads/train.csv", header=None)
 print(df.columns)
 duplicados = df.duplicated()
 print("Cantidad de filas duplicadas:", duplicados.sum())
@@ -21,18 +21,18 @@ df = df.drop(df.columns[0], axis=1)
 # Eliminar filas duplicadas si existieran
 #df = df.drop_duplicates()
 
-# # Separar variables predictoras y etiqueta
-# X = df.drop(columns=['label'])  # o 'attack_cat' si es multiclase
-# y = df['label']
+
+# Separaramos las variables predictoras y etiqueta
 np_data_training = np.asarray(df, dtype=None)
 
 X = np_data_training[:, 0:-2]  # Seleccionar todas las columnas menos las dos últimas
 y = np_data_training[:, -2]    # Seleccionar la penúltima columna (etiqueta como cadena)
 
- # Si hay más columnas categóricas, puedes añadirlas al mismo proceso
-le = preprocessing.LabelEncoder()
 
-# Identificar columnas categóricas que necesitan transformación (por ejemplo, columnas  2, 3, 4)
+
+le = preprocessing.LabelEncoder() #Tecnica para eliminar las variables categoricas
+
+# Identificar columnas categóricas que necesitan transformación (por ejemplo, columnas  1,2,3)
 columnas_categoricas = [1, 2, 3]
 
 for col in columnas_categoricas:
@@ -47,18 +47,16 @@ for col in range(X.shape[1]):
 
 
 y = le.fit_transform(y)
-# y_train = le.fit_transform(y_train)
 
-        # Eliminamos NAN y convertimos los valores a float
-X = np.nan_to_num(X.astype(float))
-        # X_train = np.nan_to_num(X_train.astype(float))
+
+# Eliminamos NAN y convertimos los valores a float
+X = np.nan_to_num(X.astype(float))  
 y = np.nan_to_num(y.astype(float))
-        # y_train = np.nan_to_num(y_train.astype(float))
 
-#X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)   
+ 
 # Escalar características
-#scaler = StandardScaler()
-#X_scaled = scaler.fit_transform(X)
+# scaler = StandardScaler()
+# X_scaled = scaler.fit_transform(X)
 # Modelo base
 model = DecisionTreeClassifier()
 

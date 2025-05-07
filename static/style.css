@@ -1,570 +1,222 @@
-/*
-tokens Name {
-
-	#colors
-	{
-		bg-100: #FFF;
-        bg-200: #F0F0F0;
-        bg-300: #E4E4E4;
-        bg-400: #C3C3C3;
-        gris-300: #CACACA;
-        gris-400: #8E8E8E;
-        gris-500: #686868;
-		text: #1d1e20;
-		text-100: #626262;
-        primario-400: #00893B;
-        secundario: #2B2C32;
-		border: #A6A6A6;
-        primario-200: #EEF3ED;
-        primario-300:#E5EFE5;
-		primario-500: #045026;
-        accent-color: #00A6C7;
-        accent-color-500: #0087A3;
-        
-	}
-
-	#radius
-	{
-		New: 10px;
-	}
-
-	#borders
-	{
-		bordeBoton: #CACACA;
-	}
+  @font-face {
+      font-family: Roboto-regular;
+      src: gx-file(roboto-regular);
+  }
 
 
-	#shadows
-	{
-        sombra: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-	}
-}
-*/
+  *::before {
+      box-sizing: border-box;
+  }
 
-@font-face
-	{
-		font-family: Roboto-regular;
-		src: gx-file(roboto-regular);
-	}
-    @font-face
-	{
-		font-family: Roboto-medium;
-		src: gx-file(roboto-medium);
-	}
+  *::after {
+      box-sizing: border-box;
+  }
 
-    @font-face
-	{
-		font-family: Roboto-light;
-		src: gx-file(roboto-light);
-	}
+  * {
+      box-sizing: border-box !important;
+      margin: 0;
+      padding: 0;
+      font-family: Roboto-regular !important;
+  }
+
+
+
+  
+
+  /* Header */
+  header {
+      width: 100%;
+      /* Ocupa todo el ancho */
+
+      text-align: center;
+      background-color: #333;
+
+  }
+
+  main {
+
+      /* Activa Flexbox */
+      /*flex-direction: column;*/
     
-    *{
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: Roboto-regular;
-    }
-
-    a{
-        text-decoration: none !important;
-        color: inherit;
-    }
-
-    span{
-        margin: 0;
-        padding-top: 1px;
-    }
-
-    *::before {
-        box-sizing: border-box;
-    }
-
-    *::after{
-        box-sizing: border-box;
-    }
-
-    input, button,textarea,select{
-        font: inherit;
-    }
-    /*
-    html{
-        height: 100% ;
-        width: 100vw ;
-        margin: 0 ;
-        padding: 0 ;
-        overflow-x: hidden ;
-        scroll-behavior: smooth ;
-        background-color: #f7f7f7 ;
-        overflow-y: auto; /* Habilita el scroll vertical 
-    }*/
-
-    /* General del body */
-    body {
-        padding: 0;
-        margin: 0;
-        height: 120vh;
-        display: flex;            /* Activa Flexbox */
-        justify-content: center;  /* Centra horizontalmente */
-        align-items: center;      /* Centra verticalmente */
-       /* min-height: 10vh;        /* Altura mínima igual al 100% de la ventana */
-        background-color: #f4f4f4; /* Color de fondo */
-        font-family: Arial, sans-serif; /* Fuente base */
-        flex-direction: column;
-        overflow-y: auto;
-       
-    }
-
-    /* Contenedor principal */
-    .contenedor {
-        background-color: white;   /* Fondo blanco */
-        padding: 20px;             /* Márgenes internos */
-        border-radius: 10px;       /* Esquinas redondeadas */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-        width: 80%;                /* Ancho relativo al viewport */
-        max-width: 600px;          /* Ancho máximo */
-        text-align: center;        /* Centra el texto dentro del contenedor */
-    }
-
-    /* Estilo del Header */
-    .header {
-        display: flex;                  /* Activa Flexbox */
-        align-items: center;            /* Centra verticalmente el contenido */
-        justify-content: center;        /* Centra horizontalmente (excepto imagen) */
-        background-color: #333;         /* Fondo oscuro */
-        color: white;                   /* Texto blanco */
-        width: 100%;                    /* Ocupa todo el ancho */
-        padding: 10px 20px;             /* Márgenes internos */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para el header */
-        position: fixed;                /* Fija el header en la parte superior */
-        top: 0;                         /* Posición superior 0 */
-        z-index: 10;                    /* Asegura que esté encima de otros elementos */
-    }
-
-    /* Imagen del Logo */
-    .logo {
-        width: 80px;                    /* Tamaño del logo */
-        height: 80px;                   /* Tamaño del logo */
-        margin-right: 15px;             /* Espacio entre la imagen y el título */
-    }
-
-    /* Título del Header */
-    .titulo-header {
-        flex: 1;                        /* Ocupa el espacio restante */
-        text-align: center;             /* Centra el texto del título */
-        font-size: 1.5rem;              /* Tamaño del texto */
-    }
+      /* Centra verticalmente */
+      /* justify-content: center; */
+      height: 100%;
+      /* Hace que el <main> ocupe toda la altura de la ventana */
+      width: 100%;
+      /* Asegura que el <main> ocupe todo el ancho */
+      /* background-color: #f9f9f9; /* Fondo opcional */
+      text-align: center;
+  }
 
 
-    /* Contenedor de Resultados */
-    .resultados {
-        background-color: #fff;
-        padding: 20px;
-        margin-top: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        width: 80%;
-        max-width: 800px;
-        text-align: left;
-    }
+  .contenedor {
+      background-color: white;
+      /* Fondo blanco */
+      padding: 20px;
+      /* Márgenes internos */
+      border-radius: 10px;
+      /* Esquinas redondeadas */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      /* Sombra ligera */
+      width: 80%;
+      /* Ancho relativo al viewport */
+      max-width: 600px;
+      /* Ancho máximo */
+      text-align: center;
+      /* Centra el texto dentro del contenedor */
+  }
 
-    /* Gráficos */
-    #graficos {
-        margin-top: 15px;
-        text-align: center;
-    }
+  footer {
+      width: 100%;
+      height: 100%;
+      /* Ocupa todo el ancho */
+      text-align: center;
+      background-color: #333;
+      background-size: cover;
+      background-repeat: no-repeat;
+      padding-top: 20px;
+  }
+  .footerContainer{
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-right: auto;
+    padding-left: auto;
+  }
 
-    /* Tablas */
-    #tablas {
-        margin-top: 20px;
-        overflow-x: auto; /* Para tablas grandes */
-    }
-    
+  .flexContainerFooter{
+    display: flex;
+    justify-content: space-between;
+  }
 
-    .main{
-        min-height: 100vh;
-        overflow-y: auto;
-    }
+  /* Imagen del Logo */
+  .logo {
+      width: 80px;
+      /* Tamaño del logo */
+      height: 80px;
+      /* Tamaño del logo */
+      margin-right: 15px;
+      /* Espacio entre la imagen y el título */
+  }
 
-    /*
-    .header{
-        width: 1000px;
-        height: 100%;
-        
-    }*/
-    
-    .HeaderContainer{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        background-color: #FFF; 
-    }
+  /* Título del Header */
+  .titulo-header {
+      flex: 1;
+      /* Ocupa el espacio restante */
+      text-align: center;
+      /* Centra el texto del título */
+      font-size: 1.5rem;
+      /* Tamaño del texto */
+      color: #f4f4f4;
+  }
 
-    .header{
-        width: 1000px !important;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 100 !important;
-        
-    }
-    .tituloHeader{
-        font-family: Roboto-medium;
-        font-size: 24px;
-        color: #2B2C32;
-    }
+  .wizard {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 600px;
+  }
 
-    .content {
-        text-align: center; /* Centra el texto dentro del contenido */
-    }
-    
-    
-    .contentSection{
-        position: absolute;
-        text-align: center; /* Centra el texto dentro del contenido */
-        width: 1000px;
-        margin-inline: auto; 
-        height: 100%;
-        padding-top: 24px;
-        padding-bottom: 24px;
-    }
-    
-    
-    
-    .mainContainer{
-        height: 100vh;
-        width: 100vw;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-    
-    .nroEstadoActual{
-        font-family: Roboto-medium; 
-        color: #00893B;
-        z-index: 1;
-     }
-    
-     .nroEstado{
-        font-family: Roboto-medium; 
-        color:  #8E8E8E;
-     }
-    
-     .btnSubirArchivo{
-        background: none;
-        background-color: #910404;
-        border: none;
-        color: #fff;
-        font-family: Roboto-medium;
-        padding: 8px;
-        border-radius: 8px;
-        transition: all 0.3s ease ;
-        z-index: 0 !important;
-    }
-    
-    .contentPlaceHolder{
-           overflow-x: hidden;
-           overflow-y: auto;
-           height: calc(100vh - 130px );
-           width: 100%;
-           position: relative;
-           display: flex;
-           justify-content: center;
-       }
-    
-    
-    .overflowX{
-        overflow-y: auto;
-        max-height: 293px;
-    }
-    .overflowY{
-        height: 100%;
-    }
-    
-    
-    @media(max-width: 1001px){
-        .header{
-            width: 100%;
-            padding: 0 16px;
-        }
-      
-    }
-    
-    @media(max-width: 450px){
-        .flexVerificacion{
-        
-          flex-direction: column;
-      
-      }
-        .tituloHeader{
-          display: none;
-      }
-    }
-    
-    .titulo{
-        font-family: Roboto-medium;
-        font-size: 32px;
-        
-    }
-    
-    .table-container{
-        width: min(1000px,100%-3rem);
-        margin-inline: auto; 
-        overflow-x: auto;
-    }
-    
-    
-    .table-containerExtend{
-        padding-top: 20px;
-        display: grid;
-        grid-template-areas: 
-            "item1"
-            "item2";
-        grid-template-columns: 1fr; /* Una columna */
-        grid-template-rows: auto;   /* Las filas se ajustan automáticamente */
-    }
+  .step {
+      display: none;
+  }
 
-    .main2{
-        width:100%; 
-        height:100%;
-        position:absolute;
-        z-index:0;
-        display:flex;
-        justify-content:center;
-        right:0px;
-        left:0px;
-        bottom:0px;
-        top:0px;
-    }
+  .step.active {
+      display: block;
+  }
 
-    .containerTablaEstado{
-        border-radius: 16px;
-        padding: 16px 24px; 
-        border: 1px solid #CACACA;
-        background-color: #fff;
-        width: auto;
-        margin-left: 24px;
-        margin-right: 24px; 
-    }
+  button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
 
-    
-    .tablaEstado{
-        display: flex;
-        gap: 46px;
-    }
+  .next-btn {
+      background-color: #007bff;
+      color: white;
+  }
 
-    .pasoNro{
-        font-family: Roboto-medium;
-        font-size: 1.5rem;
-        color: #686868;
-    }
+  .prev-btn {
+      background-color: #6c757d;
+      color: white;
+  }
 
-    .pasoText{
-        font-family: Roboto-medium;
-        font-size: 1.5rem;
-    }
-    
-    .flexEstado{
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px !important; 
-        margin-bottom: 16px;
-    }
-    /*NUEVOS ESTILOS DESDE ACA SON LOS QUE ESTOY USANDO*/
-/*
-    form{
-        display: block;
-        margin-top: 0em;
-        unicode-bidi: isolate;
-    }
-    div {
-        display: block;
-        unicode-bidi: isolate;
-    } */
-   
-    /* Estilos generales para la cabecera */
-    .main-header {
-        background-color: #4CAF50;
-        /* Color de fondo */
-        color: white;
-        /* Color del texto */
-        padding: 10px 20px;
-        /* Espaciado interno */
-        text-align: center;
-        /* Centrar el contenido */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        /* Sombra */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
+  button:hover {
+      opacity: 0.9;
+  }
 
-    }
+  .contenedorGeneral {
+      display: flex;
+      flex-direction: column;
+      /* Coloca los contenedores uno debajo del otro */
+      gap: 20px;
+      /* Espaciado entre contenedores */
+      width: 100%;
+      /* Ancho del contenedor general */
+      max-width: 1200px;
+      margin: 0 auto;
+      /* border: 2px solid #ddd; /* Opcional: Bordes */
+      padding: 50px;
+      /* Opcional: Espaciado interno */
+      /* background-color: #f9f9f9; */
+      align-items: center;
+      height: 100%;
+  }
 
-    /* Estilos para la barra de navegación */
-    .navbar ul {
-        list-style-type: none;
-        /* Sin viñetas */
-        margin: 0;
-        padding: 0;
-        display: flex;
-        /* Mostrar los elementos en línea */
-        justify-content: center;
-        /* Centrar los enlaces */
-        gap: 20px;
-        /* Espaciado entre los elementos */
-    }
+  .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      /* Fondo oscuro semitransparente */
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      z-index: 1000;
+      /* Asegúrate de que esté encima de otros elementos */
+  }
 
-    .navbar a {
-        text-decoration: none;
-        /* Quitar subrayado */
-        color: white;
-        /* Color del texto */
-        font-weight: bold;
-        /* Texto en negrita */
-        transition: color 0.3s ease;
-        /* Transición suave al pasar el mouse */
-    }
+  .contenedorReportes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+  }
 
-    .navbar a:hover {
-        color: #f0f0f0;
-        /* Cambiar el color al pasar el mouse */
-    }
+  .imagen {
+      width: 100%;
+      border: 1px solid #ddd;
+      padding: 10px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  }
 
-    .logoUNNE{
-        height: 60px ;
-        width: fit-content;
-       
-    }
-    
+  .imagen-container {
+      text-align: center;
+      width: 100%;
+  }
 
+  .tituloBody {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+  }
 
-    @media(max-width: 600px){
-    
-      
-        .logoUNNE{
-           
-           height:50px !important;
-        }
-
-        .table-containerExtend{
-            grid-template-areas: 
-                "item2"
-                "item1";
-            }
-
-        .maintable{
-             font-size: 14px;
-        }
-
-        .tablaEstado{
-           
-            flex-direction: column !important;
-            gap: 16px;
-        }
-
-        
-        .pasoActivo1{
-            grid-area: item1;
-        } 
-        .pasoActivo2{
-            grid-area: item2;
-        } 
-        .pasoActivo3{
-            grid-area: item3;
-        } 
-
-        .gridPasosEstado{
-            grid-template-areas: 
-                "item3"
-                "item1" 
-                "item2"; 
-        }
-   }
-/*
-   img {
-    overflow-clip-margin: content-box;
-    overflow: clip;
-    }
-   */
-
-   
-   .sectionSeleccionarData{
-    padding-bottom: 65px !important;
-    width:100%; 
-    height:100%;
-    grid-template-columns:100fr;
-    grid-template-rows:auto;
-    }    
-
-    .tablaSeleccionar{
-        width:100%;
-        grid-template-columns:100fr;
-        grid-template-rows:100%;
-        grid-row-gap:20px;
-    }
-
-    
-    .BigTitle {
-        font-family: Roboto-medium;
-        font-size: 24px;
-    }
-
-    
-    .table-striped{
-        background-color: #E4E4E4;
-        width: 100%;
-      
-        border-collapse: collapse;
-        border: 1px solid #C3C3C3;
-       
-
-        
-        overflow-x: auto; /* Activa el scroll horizontal */
-        /* Previene saltos de línea */
-
-    }
-
-    .table-striped th{
-        background-color: #E5EFE5 !important;
-        padding: 8px !important;
-        color: #1d1e20;
-          border-bottom: 1px solid #C3C3C3;
-        
-    }
-
-    .table-striped tbody{
-        background-color: #F9F9F9;
-       
-        color: #626262;
-    }
-    .table-striped tr{
-       
-        border-top: 1px solid #C3C3C3;
-
-    }
-
-    .table-striped td{
- padding: 12px 8px !important;
-    }
-    .table-striped tr:first-child{
-        border-top: none;
-    }
-
-    .table-striped tr:last-child{
-         border-bottom:  1px solid #C3C3C3;
-    }
-   
-
-    .table-striped tfoot{
-        
-        display: none;
-    }
-
-
-
-
-
-
-
-   
+  .sectionReporte{
+ 
+    width: min(1000px,100%-3rem);
+    margin-inline: auto; 
+    height: 100%;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 20%;
+    padding-right: 20%;
+  }

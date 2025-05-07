@@ -17,7 +17,7 @@ L_CLF = 'RF'
 
 
 #LECTURA DE ARGUMENTOS
-num_caract = 35
+num_caract = 5
 selector = 'RFE'
 print("ARGUMENTOS: num_caract=" + str(num_caract) + " selector=" + str(selector))
 
@@ -38,7 +38,8 @@ param_dt = {
     'max_depth': [5, 10, 15, None],
     'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 5],
-    'criterion': ['gini', 'entropy']
+    'criterion': ['gini', 'entropy'],
+    'random_state': [5,20,42]
 }
 
 # 2. Hiperparámetros para Bagging con árbol base
@@ -59,7 +60,7 @@ param_rf = {
 }
 
 # Entrenadores base
-#dt = DecisionTreeClassifier(random_state=42)
+dt = DecisionTreeClassifier(random_state=42)
 
 # Inicializar el clasificador base
 #base_clf = DecisionTreeClassifier()
@@ -67,7 +68,7 @@ param_rf = {
 # Crear el clasificador Bagging
 #bagging_clf = BaggingClassifier(base_clf)
 
-rf = RandomForestClassifier(random_state=42)
+#rf = RandomForestClassifier(random_state=42)
 
 # Aplicar GridSearchCV
 def buscar_mejores_parametros(nombre_modelo, modelo, param_grid):
@@ -81,6 +82,6 @@ def buscar_mejores_parametros(nombre_modelo, modelo, param_grid):
 #f1_macro, es ideal para problemas multiclase con clases desbalanceadas, como UNSW-NB15.
 
 # Ejecutar búsquedas
-#mejor_dt = buscar_mejores_parametros("Decision Tree", dt, param_dt)
+mejor_dt = buscar_mejores_parametros("Decision Tree", dt, param_dt)
 #mejor_bag = buscar_mejores_parametros("Bagging", bagging_clf, param_bagging)
-mejor_rf = buscar_mejores_parametros("Random Forest", rf, param_rf)
+#mejor_rf = buscar_mejores_parametros("Random Forest", rf, param_rf)

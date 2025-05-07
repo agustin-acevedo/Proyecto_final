@@ -43,11 +43,18 @@ y_test = np.loadtxt("./datos/caracteristicas" + str(num_caract) + "selector" + s
 le = pickle.load(open('./modelos/le.sav', 'rb'))
 
 # Inicializar el clasificador base
-base_clf = DecisionTreeClassifier()
+base_clf = DecisionTreeClassifier(criterion='entropy')
 
 # Crear el clasificador Bagging
-bagging_clf = BaggingClassifier(base_clf, n_estimators=100,n_jobs=-1, random_state=42)
-
+bagging_clf = BaggingClassifier(
+    base_clf,
+    n_estimators=150,        # Número de modelos base
+    max_samples=0.8,        # Porcentaje de muestras para cada modelo base
+    max_features=0.8,       # Porcentaje de características usadas por modelo
+    bootstrap=True,         # Con reemplazo
+    random_state=42,
+    n_jobs=-1               # Usa todos los núcleos disponibles
+)
 #FASE DE ENTRENAMIENTO
 print ("FASE DE ENTRENAMIENTO")
 t_inicio_entrenamiento = time.time()
