@@ -28,7 +28,7 @@ app = Flask(__name__)
 # Ruta principal para la página de inicio
 @app.route('/')
 def home():
-    return render_template('inicio.html')
+    return render_template('index.html')
 
 UPLOAD_FOLDER = 'uploads'  # Carpeta donde voy a guardar los csv subidos 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Crea la carpeta si no existe
