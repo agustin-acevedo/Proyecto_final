@@ -1,4 +1,7 @@
 
+let ruta = null;
+let rutaTest = null;
+
 function goToStep(step) {
     if (step === 2) {
         const trainFile = document.getElementById('trainFile').files[0];
@@ -97,6 +100,7 @@ function preprocesarDatos(filePath,rutaTest, callback) {
         }
     }, 4000);
     // Envía la ruta del archivo al backend
+    console.log("Preprocesar con:", ruta, rutaTest);
     fetch('/preprocess', {
         method: 'POST',
         headers: {

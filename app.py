@@ -28,6 +28,7 @@ app = Flask(__name__)
 # Ruta principal para la página de inicio
 @app.route('/')
 def home():
+    print("INICIO", flush=True)
     return render_template('index.html')
 
 UPLOAD_FOLDER = 'uploads'  # Carpeta donde voy a guardar los csv subidos 
@@ -64,7 +65,7 @@ def preprocess_data():
         return jsonify({'error': 'Archivo no encontrado'}), 400
     
     try:
-        print ("LECTURA DE FICHEROS")
+        print ("LECTURA DE FICHEROS",flush=True)
         df_train = pd.read_csv(file_path, header=None)  #Lee la ruta del conjunto de datos de entrenamiento 
        
         df_test = pd.read_csv(file_path_test, header=None) #Lee la ruta del conjunto de datos de prueba
@@ -92,7 +93,7 @@ def preprocess_data():
         y_train = np_data_training[:, -2]    # Seleccionar la penúltima columna (etiqueta como cadena) en el conjunto de datos de entrenamiento
         X_test = np_data_test[:, 0:-2]  # Seleccionar todas las columnas menos las dos últimas en el conjunto de datos de test
         y_test = np_data_test[:, -2]    # Seleccionar la penúltima columna (etiqueta como cadena) en el conjunto de datos de test
-        print("INICIO DEL PREPROCESAMIENTO")
+        print("INICIO DEL PREPROCESAMIENTO", flush=True)
 
     
         # Creamos el modelo a utilizar para eliminar las columnas categoricas
@@ -297,6 +298,6 @@ if __name__ == '__main__':
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)
 
 
