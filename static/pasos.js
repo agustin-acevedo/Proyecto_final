@@ -1,7 +1,6 @@
 
-//let ruta = null;
-//let rutaTest = null;
-
+let ruta 
+let rutaTest 
 function goToStep(step) {
     if (step === 2) {
         const trainFile = document.getElementById('trainFile').files[0];
@@ -27,6 +26,11 @@ function goToStep(step) {
                // goToStep(3); // Ir al siguiente paso
                 let ruta = data.filePath
                 let rutaTest = data.testPath
+                 //LOGICA PARA CONECTAR CON EL BACKEND DEL PREPROCESAMIENTO 
+                preprocesarDatos(ruta, rutaTest, () => {
+                    // Avanza al siguiente paso después del preprocesamiento
+                    //showStep(4);
+                });
             } else {
                 alert("Error al subir archivos: " + data.error);
             }
@@ -35,14 +39,14 @@ function goToStep(step) {
             console.error("Error en la carga:", error);
         });
     } else {
-        if (step === 3) {
+        //if (step === 3) {
             //LOGICA PARA CONECTAR CON EL BACKEND DEL PREPROCESAMIENTO 
-            preprocesarDatos(ruta, rutaTest, () => {
+          //  preprocesarDatos(ruta, rutaTest, () => {
                 // Avanza al siguiente paso después del preprocesamiento
                 //showStep(4);
-            });
+            //});
 
-        } else {
+        //} else {
             if (step === 4) {
                 trainModel();
             } else {
@@ -51,7 +55,7 @@ function goToStep(step) {
                 }
             }
         }
-    }
+    
     // Para otros pasos, solo cambiar
     showStep(step);
 }

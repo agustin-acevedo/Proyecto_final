@@ -42,7 +42,7 @@
             <div class="wizard">
                 <!-- Paso 1 -->
                 <div class="step active" id="step-1">
-                    <h2>Paso 1: Cargar Dataset</h2>
+                    <h2>Paso 1: Cargar y preprocesamiento de los datos.</h2>
                     <p>Carga el conjunto de datos de entrenamiento.</p>
                     <input type="file" id="trainFile" name="trainFile" accept=".csv">
                     <br><br>
@@ -55,14 +55,14 @@
                 </div>
 
                 <!-- Paso 2 -->
-                <div class="step" id="step-2">
+                <!-- <div class="step" id="step-2">
                     <h2>Paso 2: Preprocesar Datos</h2>
                     <p>Al presionar en el boton "Siguiente" se iniciciara el preprocesamiento de los datos cargados.</p>
                     <div>
                         <button class="prev-btn" onclick="goToStep(1)">Anterior</button>
                         <button class="next-btn" onclick="goToStep(3)">Siguiente</button>
                     </div>
-                </div>
+                </div> -->
 
                 <div id="loading-message" class="loading-overlay" style="display: none;">
                     <p id="loading-text">Cargando, por favor espera...</p>
@@ -70,7 +70,7 @@
 
                 <!-- Paso 3 -->
                 <div class="step" id="step-3">
-                    <h2>Paso 3: Evaluar Modelos</h2>
+                    <h2>Paso 2: Evaluar Modelos</h2>
                     <label for="modelSelect">Elige un algoritmo:</label>
                     <select id="modelSelect" name="model" style="width: 100%;">
                         <option value="DT">Arbol de desicion</option>
@@ -89,7 +89,7 @@
 
                 <!-- Paso 4 -->
                 <div class="step" id="step-4">
-                    <h2>Paso 4: Generar Resultados</h2>
+                    <h2>Paso 3: Generar Resultados</h2>
 
                     <p>Pulsa "Siguiente" para empezar con el proceso de generar los graficos, reportes, estadisticas,
                         etc.
@@ -104,7 +104,7 @@
 
                 <!-- Paso 5 -->
                 <div class="step" id="step-5">
-                    <h2>Paso 5: Resultados</h2>
+                    <h2>Paso 4: Resultados</h2>
                     <p>Pulsa "Ver resultados" para ver todos los resutados generados.</p>
                     <div>
                         <button onclick="window.location.href='/resultados'" class="next-btn">Ver Resultados</button>
