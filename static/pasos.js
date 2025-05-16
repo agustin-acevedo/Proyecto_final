@@ -1,6 +1,6 @@
 
-let ruta = null;
-let rutaTest = null;
+//let ruta = null;
+//let rutaTest = null;
 
 function goToStep(step) {
     if (step === 2) {
@@ -25,8 +25,8 @@ function goToStep(step) {
             if (data.success) {
                 console.log("Archivos subidos correctamente");
                // goToStep(3); // Ir al siguiente paso
-                ruta = data.filePath
-                rutaTest = data.testPath
+                let ruta = data.filePath
+                let rutaTest = data.testPath
             } else {
                 alert("Error al subir archivos: " + data.error);
             }
