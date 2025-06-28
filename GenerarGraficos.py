@@ -176,43 +176,58 @@ output_dir = f"./graficos/caracteristicas{num_caract}selector{selector}/"
 directorio_img_DT = "./graficos/caracteristicas"  + str(num_caract) + "selector" + str(selector) +"/"+ f"tabDT-Metricas.png"
 directorio_img_RF = "./graficos/caracteristicas"  + str(num_caract) + "selector" + str(selector) +"/"+ f"tabRF-Metricas.png"
 directorio_img_BG = "./graficos/caracteristicas"  + str(num_caract) + "selector" + str(selector) +"/"+ f"tabBagging-Metricas.png"
+Clasificadores_Seleccionados = []
 
-if os.path.exists(directorio_img_DT) and os.path.exists(directorio_img_RF) and os.path.exists(directorio_img_BG): 
-    guardar_grafico(CLASIFICADORES, baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
-    guardar_grafico(CLASIFICADORES, p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
-    guardar_grafico(CLASIFICADORES, t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
-    guardar_grafico(CLASIFICADORES, t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
-else:
-    if os.path.exists(directorio_img_DT) and not os.path.exists(directorio_img_RF) and not os.path.exists(directorio_img_BG): 
-        guardar_grafico(CLASIFICADORES[0], baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
-        guardar_grafico(CLASIFICADORES[0], p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
-        guardar_grafico(CLASIFICADORES[0], t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
-        guardar_grafico(CLASIFICADORES[0], t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
-    else:
-        if not os.path.exists(directorio_img_DT) and os.path.exists(directorio_img_RF) and not os.path.exists(directorio_img_BG): 
-            guardar_grafico(CLASIFICADORES[1], baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
-            guardar_grafico(CLASIFICADORES[1], p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
-            guardar_grafico(CLASIFICADORES[1], t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
-            guardar_grafico(CLASIFICADORES[1], t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
-        else:
-            if not os.path.exists(directorio_img_DT) and not os.path.exists(directorio_img_RF) and os.path.exists(directorio_img_BG): 
-                guardar_grafico(CLASIFICADORES[2], baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
-                guardar_grafico(CLASIFICADORES[2], p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
-                guardar_grafico(CLASIFICADORES[2], t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
-                guardar_grafico(CLASIFICADORES[2], t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
-            else:
-                if os.path.exists(directorio_img_DT) and not os.path.exists(directorio_img_RF) and  os.path.exists(directorio_img_BG):
-                    getter = itemgetter(0, 2)
-                    resultado = getter(CLASIFICADORES)
-                    guardar_grafico(resultado, baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
-                    guardar_grafico(resultado, p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
-                    guardar_grafico(resultado, t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
-                    guardar_grafico(resultado, t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
-                else:
-                    if not os.path.exists(directorio_img_DT) and  os.path.exists(directorio_img_RF) and  os.path.exists(directorio_img_BG):
-                        guardar_grafico(CLASIFICADORES[1:2], baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
-                        guardar_grafico(CLASIFICADORES[1:2], p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
-                        guardar_grafico(CLASIFICADORES[1:2], t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
-                        guardar_grafico(CLASIFICADORES[1:2], t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
+if os.path.exists(directorio_img_DT): 
+    Clasificadores_Seleccionados.append('DT')
+if os.path.exists(directorio_img_RF):
+    Clasificadores_Seleccionados.append('RF')
+if os.path.exists(directorio_img_BG): 
+    Clasificadores_Seleccionados.append('Bagging')
+
+guardar_grafico(Clasificadores_Seleccionados, baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
+guardar_grafico(Clasificadores_Seleccionados, p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
+guardar_grafico(Clasificadores_Seleccionados, t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
+guardar_grafico(Clasificadores_Seleccionados, t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
+
+
+
+# if os.path.exists(directorio_img_DT) and os.path.exists(directorio_img_RF) and os.path.exists(directorio_img_BG): 
+#     guardar_grafico(CLASIFICADORES, baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
+#     guardar_grafico(CLASIFICADORES, p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
+#     guardar_grafico(CLASIFICADORES, t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
+#     guardar_grafico(CLASIFICADORES, t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
+# else:
+#     if os.path.exists(directorio_img_DT) and not os.path.exists(directorio_img_RF) and not os.path.exists(directorio_img_BG): 
+#         guardar_grafico(CLASIFICADORES[0], baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
+#         guardar_grafico(CLASIFICADORES[0], p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
+#         guardar_grafico(CLASIFICADORES[0], t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
+#         guardar_grafico(CLASIFICADORES[0], t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
+#     else:
+#         if not os.path.exists(directorio_img_DT) and os.path.exists(directorio_img_RF) and not os.path.exists(directorio_img_BG): 
+#             guardar_grafico(CLASIFICADORES[1], baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
+#             guardar_grafico(CLASIFICADORES[1], p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
+#             guardar_grafico(CLASIFICADORES[1], t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
+#             guardar_grafico(CLASIFICADORES[1], t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
+#         else:
+#             if not os.path.exists(directorio_img_DT) and not os.path.exists(directorio_img_RF) and os.path.exists(directorio_img_BG): 
+#                 guardar_grafico(CLASIFICADORES[2], baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
+#                 guardar_grafico(CLASIFICADORES[2], p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
+#                 guardar_grafico(CLASIFICADORES[2], t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
+#                 guardar_grafico(CLASIFICADORES[2], t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
+#             else:
+#                 if os.path.exists(directorio_img_DT) and not os.path.exists(directorio_img_RF) and  os.path.exists(directorio_img_BG):
+#                     getter = itemgetter(0, 2)
+#                     resultado = getter(CLASIFICADORES)
+#                     guardar_grafico(resultado, baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
+#                     guardar_grafico(resultado, p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
+#                     guardar_grafico(resultado, t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
+#                     guardar_grafico(resultado, t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
+#                 else:
+#                     if not os.path.exists(directorio_img_DT) and  os.path.exists(directorio_img_RF) and  os.path.exists(directorio_img_BG):
+#                         guardar_grafico(CLASIFICADORES[1:2], baccs_t, "Exactitud Balanceada", output_dir + "figBacc_t.png", "Clasificadores", "Exactitud balanceada")
+#                         guardar_grafico(CLASIFICADORES[1:2], p_t, "Precisión", output_dir + "figP_t.png", "Clasificadores", "Precisión")
+#                         guardar_grafico(CLASIFICADORES[1:2], t_entrenamiento_t / 60, "Tiempo de Entrenamiento", output_dir + "figTRT_t.png", "Clasificadores", "Tiempo de entrenamiento (min)")
+#                         guardar_grafico(CLASIFICADORES[1:2], t_clasificacion_t, "Tiempo de Clasificación", output_dir + "figTST_t.png", "Clasificadores", "Tiempo de clasificación (seg)")
             
         

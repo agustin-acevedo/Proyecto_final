@@ -1,6 +1,21 @@
 let ruta 
 let rutaTest 
 
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/uploads/test.csv", { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                showStep(2);
+            } else {
+                console.log("El archivo test.csv no existe");
+            }
+        })
+        .catch(error => {
+            console.error("Error al verificar el archivo:", error);
+        });
+});
+
 function goToStep(step) {
     if (step === 2) {
         const trainFile = document.getElementById('trainFile').files[0];

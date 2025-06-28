@@ -34,6 +34,12 @@ def home():
 UPLOAD_FOLDER = 'uploads'  # Carpeta donde voy a guardar los csv subidos 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Crea la carpeta si no existe
 
+
+# Ruta para servir archivos de la carpeta "uploads"
+@app.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory('uploads', filename)
+
 @app.route('/upload-datasets', methods=['POST'])
 def upload_datasets():
     try:
