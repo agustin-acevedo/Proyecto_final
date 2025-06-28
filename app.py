@@ -258,9 +258,16 @@ def train():
 
 @app.route('/results', methods=['POST'])
 def generar_graficos():
+   # print()
+    #data = request.json
+    #modelo = data.get('modeloSeleccionado')
     try:
         # Ejecutar el script que genera los gráficos
         subprocess.run(['python', 'GenerarGraficos.py'], check=True)
+        #script_descriptor = open("GenerarGraficos.py")
+        #script = script_descriptor.read()
+       # sys.argv = [str(modelo), 5, 'RFE']
+       # exec(script)
         
         return jsonify({"mensaje": "Gráficos generados correctamente"}), 200
     except subprocess.CalledProcessError as e:

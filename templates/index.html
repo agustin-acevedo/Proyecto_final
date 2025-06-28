@@ -69,17 +69,17 @@
                 </div>
 
                 <!-- Paso 3 -->
-                <div class="step" id="step-3">
+                <div class="step" id="step-2">
                     <h2>Paso 2: Evaluar Modelos</h2>
                     <label for="modelSelect">Elige un algoritmo:</label>
                     <select id="modelSelect" name="model" style="width: 100%;">
                         <option value="DT">Arbol de desicion</option>
-                        <option value="Bagging">Bagging</option>
                         <option value="RF">Bosque Aleatorio (Enfoque Bagging)</option>
+                        <option value="Bagging">Bagging</option>
                     </select>
                     <div>
                         <button class="prev-btn" onclick="goToStep(2)">Anterior</button>
-                        <button class="next-btn" onclick="goToStep(4)">Siguiente</button>
+                        <button class="next-btn" onclick="goToStep(3)">Siguiente</button>
                     </div>
                 </div>
 
@@ -88,14 +88,14 @@
                 </div>
 
                 <!-- Paso 4 -->
-                <div class="step" id="step-4">
+                <div class="step" id="step-3">
                     <h2>Paso 3: Generar Resultados</h2>
 
                     <p>Pulsa "Siguiente" para empezar con el proceso de generar los graficos, reportes, estadisticas,
                         etc.
                     </p>
                     <div>
-                        <button class="next-btn" onclick="goToStep(5)">Siguiente</button>
+                        <button class="next-btn" onclick="goToStep(4)">Siguiente</button>
                     </div>
                 </div>
                 <div id="loading-message-grafica" class="loading-overlay" style="display: none;">
@@ -103,7 +103,7 @@
                 </div>
 
                 <!-- Paso 5 -->
-                <div class="step" id="step-5">
+                <div class="step" id="step-4">
                     <h2>Paso 4: Resultados</h2>
                     <p>Pulsa "Ver resultados" para ver todos los resutados generados.</p>
                     <div>

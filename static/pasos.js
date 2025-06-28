@@ -1,6 +1,6 @@
-
 let ruta 
 let rutaTest 
+
 function goToStep(step) {
     if (step === 2) {
         const trainFile = document.getElementById('trainFile').files[0];
@@ -47,10 +47,10 @@ function goToStep(step) {
             //});
 
         //} else {
-            if (step === 4) {
+            if (step === 3) {
                 trainModel();
             } else {
-                if (step === 5) {
+                if (step === 4) {
                     generarResultados()
                 }
             }
@@ -137,7 +137,8 @@ function preprocesarDatos(filePath,rutaTest, callback) {
         });
 }
 
-let globalModelo = modelSelect.value; // Lo que realizo es guardar el modelo seleccionado para usarlo en la funicon de generar grafica
+//let modelSelect = document.getElementById('modelSelect');
+//let globalModelo = modelSelect.value; // Lo que realizo es guardar el modelo seleccionado para usarlo en la funicon de generar grafica
 function trainModel() {
     // Obtener el modelo seleccionado del <select>
     const modelSelect = document.getElementById('modelSelect');
