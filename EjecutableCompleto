@@ -1,0 +1,227 @@
+from flask import Flask, request, render_template, jsonify
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+import os.path
+from models.process import leerArchivo, preprocesamiento
+import numpy as np
+import pickle
+import codecs
+import sys
+import csv
+import time
+from sklearn import tree
+from sklearn import preprocessing
+from sklearn.feature_selection import RFE
+from sklearn.feature_selection import RFECV
+from sklearn.decomposition import PCA
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix
+import subprocess
+from flask import Flask, render_template, send_from_directory
+
+
+CLASIFICADORES = np.array(['DT', 'RF', 'Bagging'])
+
+NUM_CARACT = [5]
+
+
+print("LECTURA DE FICHEROS", flush=True)
+
+
+file_path = "./datos/UNSW_NB15_training-set.csv"
+# Lee la ruta del conjunto de datos de entrenamiento
+df_train = pd.read_csv(file_path, header=None)
+
+
+file_path_test = "./datos/UNSW_NB15_testing-set.csv"
+# Lee la ruta del conjunto de datos de prueba
+df_test = pd.read_csv(file_path_test, header=None)
+
+# Eliminar filas y columnas irrelevantes para el conjunto de datos de entrenamiento
+print(df_train.columns)
+duplicados_train = df_train.duplicated()
+print("Cantidad de filas duplicadas en el conjunto de datos de entrenamiento:",
+      duplicados_train.sum())
+
+# # Eliminar columnas irrelevantes
+# Columna que hace referencia al ID
+df_train = df_train.drop(df_train.columns[0], axis=1)
+
+# Eliminar filas y columnas irrelevantes para el conjunto de datos de test
+print(df_test.columns)
+duplicados_test = df_test.duplicated()
+print("Cantidad de filas duplicadas en el conjunto de datos de entrenamiento:",
+      duplicados_test.sum())
+
+# # Eliminar columnas irrelevantes
+# Columna que hace referencia al ID
+df_test = df_test.drop(df_test.columns[0], axis=1)
+
+np_data_training = np.asarray(df_train, dtype=None)
+np_data_test = np.asarray(df_test, dtype=None)
+
+# Seleccionar todas las columnas menos las dos últimas en el conjunto de datos de entrenamiento
+X_train = np_data_training[:, 0:-2]
+# Seleccionar la penúltima columna (etiqueta como cadena) en el conjunto de datos de entrenamiento
+y_train = np_data_training[:, -2]
+# Seleccionar todas las columnas menos las dos últimas en el conjunto de datos de test
+X_test = np_data_test[:, 0:-2]
+# Seleccionar la penúltima columna (etiqueta como cadena) en el conjunto de datos de test
+y_test = np_data_test[:, -2]
+print("INICIO DEL PREPROCESAMIENTO", flush=True)
+
+
+# Creamos el modelo a utilizar para eliminar las columnas categoricas
+le = preprocessing.LabelEncoder()
+
+# Identificar columnas categóricas que necesitan transformación (por ejemplo, columnas 1, 2, 3 que son datos no numericos)
+columnas_categoricas = [1, 2, 3]
+
+for col in columnas_categoricas:
+    X_train[:, col] = le.fit_transform(X_train[:, col].astype(str))
+
+for col in columnas_categoricas:
+    X_test[:, col] = le.fit_transform(X_test[:, col].astype(str))
+
+
+# Convertir las demás columnas a float
+for col in range(X_train.shape[1]):
+    if col not in columnas_categoricas:
+        X_train[:, col] = X_train[:, col].astype(float)
+
+for col in range(X_test.shape[1]):
+    if col not in columnas_categoricas:
+        X_test[:, col] = X_test[:, col].astype(float)
+
+
+y_test = le.fit_transform(y_test)
+y_train = le.fit_transform(y_train)
+
+# Eliminamos NAN y convertimos los valores a float
+X_train = np.nan_to_num(X_train.astype(float))
+X_test = np.nan_to_num(X_test.astype(float))
+y_train = np.nan_to_num(y_train.astype(float))
+y_test = np.nan_to_num(y_test.astype(float))
+
+
+# DIVISIÓN DEL DATASET
+# X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+print("X_train, y_train:", X_train.shape, y_train.shape)
+print("X_test, y_test:", X_test.shape, y_test.shape)
+
+# Se guarda los datos en el disco
+print("Los datos se estan guardando en el disco...")
+
+unique_elements, counts_elements = np.unique(
+    le.inverse_transform(y_train.astype(int)), return_counts=True)
+print("Número de elementos de cada clase en el Train Set:")
+print(np.asarray((unique_elements, counts_elements)))
+
+# Crear la carpeta si no existe
+os.makedirs("datos", exist_ok=True)
+
+# Ruta completa del archivo
+ruta_archivo = os.path.join("datos", "train_descr.txt")
+
+# Escribir en el archivo
+with open(ruta_archivo, "w") as archivo:
+    archivo.write(str(np.asarray((unique_elements, counts_elements))))
+
+unique_elements, counts_elements = np.unique(
+    le.inverse_transform(y_test.astype(int)), return_counts=True)
+print("Número de elementos de cada clase en el Test Set:")
+print(np.asarray((unique_elements, counts_elements)))
+# Crear la carpeta si no existe
+os.makedirs("datos", exist_ok=True)
+
+# Ruta completa del archivo
+ruta_archivo = os.path.join("datos", "test_descr.txt")
+
+# Escribir en el archivo
+with open(ruta_archivo, "w") as archivo:
+    archivo.write(str(np.asarray((unique_elements, counts_elements))))
+
+for num in NUM_CARACT:
+    # SELECCION DE CARACTERÍSTICAS
+    print("SELECCION DE CARACTERÍSTICAS: " + str(num) + " CARACTERÍSTICAS")
+    estimador = tree.DecisionTreeClassifier()
+    selector1 = RFE(estimador, n_features_to_select=int(num), step=1)
+
+    print("SELECCION DE CARACTERÍSTICAS: " + str(num) +
+        " CARACTERÍSTICAS, " + "SELECTOR RFE")
+    selector1 = selector1.fit(X_train, y_train)
+    print(selector1.ranking_)
+
+    X_train1 = selector1.transform(X_train)
+    X_test1 = selector1.transform(X_test)
+
+    # CREAR DIRECTORIOS PARA GUARDAR DATOS PROCESADOS
+    if not os.path.exists("./datos/caracteristicas" + str(num) + "selectorRFE"):
+        os.mkdir("./datos/caracteristicas" + str(num) + "selectorRFE")
+
+
+    # CREAR DIRECTORIOS PARA GUARDAR RESULTADOS
+    if not os.path.exists("./resultados"):
+        os.mkdir("./resultados")
+    if not os.path.exists("./resultados/caracteristicas" + str(num) + "selectorRFE"):
+        os.mkdir("./resultados/caracteristicas" + str(num) + "selectorRFE")
+
+    # CREAR DIRECTORIOS PARA GUARDAR GRÁFICAS
+    if not os.path.exists("./graficos"):
+        os.mkdir("./graficos")
+    if not os.path.exists("./graficos/caracteristicas" + str(num) + "selectorRFE"):
+        os.mkdir("./graficos/caracteristicas" + str(num) + "selectorRFE")
+
+    # GUARDAR EN DISCO
+    np.savetxt("./datos/caracteristicas" + str(num) + "selectorRFE/X_train.csv", X_train1, delimiter=',')
+    np.savetxt("./datos/caracteristicas" + str(num) + "selectorRFE/y_train.csv", y_train, delimiter=',')
+    np.savetxt("./datos/caracteristicas" + str(num) + "selectorRFE/X_test.csv", X_test1, delimiter=',')
+    np.savetxt("./datos/caracteristicas" + str(num) + "selectorRFE/y_test.csv", y_test, delimiter=',')
+    with open("./datos/caracteristicas" + str(num) + "selectorRFE/ranking.npy", 'wb') as f: np.save(f, selector1.ranking_)
+
+
+# CREAR DIRECTORIO PARA GUARDAR MODELOS
+if not os.path.exists("./modelos"):
+    os.mkdir("./modelos")
+    pickle.dump(le, open('./modelos/le.sav', 'wb'))
+
+
+
+#TESTEAR LOS CLASIFICADORES
+print("TESTEAR LOS CLASIFICADORES")
+if os.path.exists('./resultados/descr_general.dat'):
+  os.remove('./resultados/descr_general.dat')
+for num in NUM_CARACT:
+    # if os.path.exists("./resultados/caracteristicas" + str(num) + "selectorPCA/bacc_caracteristicasSelector.dat"):
+    #   os.remove("./resultados/caracteristicas" + str(num) + "selectorPCA/bacc_caracteristicasSelector.dat")
+    if os.path.exists("./resultados/caracteristicas" + str(num) + "selectorRFE/bacc_caracteristicasSelector.dat"):
+      os.remove("./resultados/caracteristicas" + str(num) + "selectorRFE/bacc_caracteristicasSelector.dat")
+
+for clf in CLASIFICADORES:
+    for num in NUM_CARACT:
+        script_descriptor = open("./clasificadores/" + clf + ".py")
+        script = script_descriptor.read()
+        sys.argv = [str(clf) + ".py", int(num), 'RFE']
+        exec(script)
+        # sys.argv = [str(clf) + ".py", int(num), 'PCA']
+        # exec(script)
+
+
+
+
+
+#EXTRAER GRÁFICAS
+print("EXTRAER GRÁFICAS")
+for num in NUM_CARACT:
+    script_descriptor = open("./GenerarGraficos.py", encoding="utf8")
+    script = script_descriptor.read()
+    sys.argv = ["GenerarGraficos.py", str(num), 'RFE']
+    exec(script)
+# for num in NUM_CARACT:
+#     script_descriptor = open("./GenerarGraficos.py", encoding="utf8")
+#     script = script_descriptor.read()
+#     sys.argv = ["GenerarGraficos.py", str(num), 'PCA']
+#     exec(script)
