@@ -144,6 +144,8 @@ for clf in CLASIFICADORES:
             # Convertir los datos a DataFrame
             df = pd.DataFrame(matriz_metricas, index=METRICAS, columns=le.classes_)
             df = df.T
+            df = df.round(2)  # Redondea todos los valores a 2 decimales
+
             
             #OTRO METODO 
             sns.set_theme(style="whitegrid", palette="pastel")  # Estilo más limpio
